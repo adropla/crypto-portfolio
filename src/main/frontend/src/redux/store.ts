@@ -12,9 +12,8 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { cryptoApi } from '../services/api';
 import watchListReducer from './reducers/watchListSlice';
-import portfoliosReducer from "./reducers/portfolioSlice";
+import portfoliosReducer from './reducers/portfolioSlice';
 import { ethereumApi } from '../services/ethereumApi';
-import { newsApi } from '../services/newsApi';
 import modalSelectedCoinsReducer from './reducers/modalSelectedCoinsSlice';
 import watchListViewReducer from './reducers/watchListViewSlice';
 
@@ -35,7 +34,6 @@ const rootReducer = combineReducers({
     modalSelectedCoinsReducer,
     watchListViewReducer,
     [ethereumApi.reducerPath]: ethereumApi.reducer,
-    [newsApi.reducerPath]: newsApi.reducer,
     portfolios: portfoliosReducer,
 });
 
@@ -56,11 +54,7 @@ const setupStore = () =>
                         REGISTER,
                     ],
                 },
-            }).concat(
-                cryptoApi.middleware,
-                ethereumApi.middleware,
-                newsApi.middleware,
-            ),
+            }).concat(cryptoApi.middleware, ethereumApi.middleware),
     });
 
 export const store = setupStore();
