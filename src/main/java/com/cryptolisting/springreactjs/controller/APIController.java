@@ -73,7 +73,7 @@ public class APIController {
         System.out.println("Trying to fetch userDetails from userDetailsService.loadUserByUsername");
 
         final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getEmail());
+                .loadUserByEmail(authenticationRequest.getEmail());
 
         System.out.println("Current userDetails: " + userDetails.getUsername());
 

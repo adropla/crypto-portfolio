@@ -16,6 +16,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    public UserDetails loadUserByEmail(String email) {
+        return loadUserByUsername(email);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
