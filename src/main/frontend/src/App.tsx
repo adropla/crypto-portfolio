@@ -11,10 +11,11 @@ import {
 import {
     CryptocurrenciesContainer,
     ExchangesContainer,
-    WatchListContainer
+    WatchListContainer,
 } from './containers';
 import ROUTES from './constants/routes';
 import Wrapper from './components/Wrapper/Wrapper';
+import AccountSetting from './components/AccountSetting/AccountSetting';
 
 const App = () => (
     <Wrapper>
@@ -43,8 +44,14 @@ const App = () => (
                     render={() => <WatchListContainer />}
                 />
                 <Route
-                    exact path={ROUTES.exchanges}
+                    exact
+                    path={ROUTES.exchanges}
                     render={() => <ExchangesContainer />}
+                />
+                <Route
+                    exact
+                    path={ROUTES.settings}
+                    render={() => <AccountSetting />}
                 />
             </Switch>
         </Layout>
