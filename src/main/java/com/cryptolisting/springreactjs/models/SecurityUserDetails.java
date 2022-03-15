@@ -16,7 +16,7 @@ public class SecurityUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public SecurityUserDetails(User user) {
-        this.mail = user.getUserName();
+        this.mail = user.getEmail();
         this.password = user.getPassword();
         this.active = user.isActive();
         this.authorities = Arrays.stream(user.getRoles().split(","))

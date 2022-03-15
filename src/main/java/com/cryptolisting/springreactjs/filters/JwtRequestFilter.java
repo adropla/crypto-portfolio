@@ -1,6 +1,6 @@
 package com.cryptolisting.springreactjs.filters;
 
-import com.cryptolisting.springreactjs.SecurityUserDetailsService;
+import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
 import com.cryptolisting.springreactjs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

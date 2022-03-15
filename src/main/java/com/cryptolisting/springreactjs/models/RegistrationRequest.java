@@ -1,23 +1,15 @@
 package com.cryptolisting.springreactjs.models;
 
-public class AuthenticationRequest {
+public class RegistrationRequest {
     private String email;
     private String password;
 
-    public AuthenticationRequest() {
+    public RegistrationRequest() {
     }
 
-    public AuthenticationRequest(String email, String password) {
+    public RegistrationRequest(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "AuthenticationRequest{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 
     public String getEmail() {

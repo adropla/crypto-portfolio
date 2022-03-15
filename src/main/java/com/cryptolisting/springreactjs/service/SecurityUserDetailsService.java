@@ -1,8 +1,7 @@
-package com.cryptolisting.springreactjs;
+package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.SecurityUserDetails;
 import com.cryptolisting.springreactjs.models.User;
-import com.cryptolisting.springreactjs.service.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,10 +17,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUserName(userName);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + userName));
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + email));
 
         return user.map(SecurityUserDetails::new).get();
     }
