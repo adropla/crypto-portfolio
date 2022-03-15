@@ -7,6 +7,8 @@ import com.cryptolisting.springreactjs.util.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RegistrationService {
 
@@ -27,6 +29,11 @@ public class RegistrationService {
 
         if (!emailValidator.validate(email) || !passwordValidator.validate(password))
             return false;
+
+        Optional<User> optional = userRepository.findByEmail(email);
+        if (optional.isPresent()) {
+            return false;
+        }
 
         user.setEmail(email);
         user.setPassword(password);

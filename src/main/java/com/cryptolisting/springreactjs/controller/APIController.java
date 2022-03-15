@@ -1,12 +1,15 @@
 package com.cryptolisting.springreactjs.controller;
 
+import com.cryptolisting.springreactjs.models.ConfirmationRequest;
 import com.cryptolisting.springreactjs.models.RegistrationRequest;
+import com.cryptolisting.springreactjs.service.ConfirmationService;
 import com.cryptolisting.springreactjs.service.RegistrationService;
 import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
 import com.cryptolisting.springreactjs.models.AuthenticationRequest;
 import com.cryptolisting.springreactjs.models.AuthenticationResponse;
 import com.cryptolisting.springreactjs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,11 +17,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.SignatureException;
 
 @Controller
 public class APIController {
@@ -34,6 +36,9 @@ public class APIController {
 
     @Autowired
     private RegistrationService registrationService;
+
+    @Autowired
+    private ConfirmationService confirmationService;
 
     @GetMapping("")
     public ModelAndView home() {
@@ -51,8 +56,25 @@ public class APIController {
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
         boolean registrationResponse = registrationService.register(request);
         return registrationResponse
-                ? ResponseEntity.ok("<h1>Registration was successful</h1>")
-                : ResponseEntity.ok("Email should be valid. Minimum eight characters, at least one uppercase letter, one lowercase letter and one number.");
+                ? ResponseEntity.ok(jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(request.getEmail())))
+                : new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @PostMapping("api/v1/confirmation/{jwt}")
+    public ResponseEntity<?> confirmation(@PathVariable String jwt) {
+        try {
+            if (jwtTokenUtil.isTokenExpired(jwt)) {
+                return ResponseEntity.ok("Token is expired!");
+            };
+        } catch(Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        String email = jwtTokenUtil.extractEmail(jwt);
+        boolean confirmationResponse = confirmationService.confirm(jwt);
+        return confirmationResponse
+                ? ResponseEntity.ok(email + " was successfully activated!")
+                : new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("api/v1/authenticate")
