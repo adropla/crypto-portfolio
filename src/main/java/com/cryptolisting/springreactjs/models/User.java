@@ -3,7 +3,7 @@ package com.cryptolisting.springreactjs.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -11,7 +11,7 @@ public class User {
     private int id;
 
     @Column
-    private String userName;
+    private String email;
 
     @Column
     private String password;
@@ -30,12 +30,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
