@@ -6,6 +6,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class StartupRunner implements ApplicationRunner {
 
@@ -15,5 +17,15 @@ public class StartupRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         cleaningService.clean();
+
+        /*
+         StringBuilder sb = new StringBuilder();
+         Map<String, String> env = System.getenv();
+         for (String key : env.keySet()) {
+             sb.append(key + ": " + env.get(key)  + "\n");
+         }
+         System.out.println(sb.toString());
+
+        */
     }
 }
