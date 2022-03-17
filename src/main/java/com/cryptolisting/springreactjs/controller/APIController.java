@@ -3,6 +3,7 @@ package com.cryptolisting.springreactjs.controller;
 import com.cryptolisting.springreactjs.models.ConfirmationRequest;
 import com.cryptolisting.springreactjs.models.RegistrationRequest;
 import com.cryptolisting.springreactjs.service.ConfirmationService;
+import com.cryptolisting.springreactjs.service.EmailSender;
 import com.cryptolisting.springreactjs.service.RegistrationService;
 import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
 import com.cryptolisting.springreactjs.models.AuthenticationRequest;
@@ -11,6 +12,8 @@ import com.cryptolisting.springreactjs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import com.cryptolisting.springreactjs.service.EmailService;
 
 import java.security.SignatureException;
 
@@ -40,6 +44,9 @@ public class APIController {
     @Autowired
     private ConfirmationService confirmationService;
 
+    @Autowired
+    private EmailService emailService;
+
     @GetMapping("")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
@@ -55,12 +62,17 @@ public class APIController {
     @PostMapping("api/v1/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
         boolean registrationResponse = registrationService.register(request);
-        return registrationResponse
-                ? ResponseEntity.ok(jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(request.getEmail())))
-                : new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        if (registrationResponse) {
+            String email = request.getEmail();
+            String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email));
+            emailService.send(email, "<a href=\"http://localhost:8080/api/v1/confirmation/" + jwt + "\">link</a>");
+            return ResponseEntity.ok("ok");
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
-    @PostMapping("api/v1/confirmation/{jwt}")
+    @GetMapping("api/v1/confirmation/{jwt}")
     public ResponseEntity<?> confirmation(@PathVariable String jwt) {
         try {
             if (jwtTokenUtil.isTokenExpired(jwt)) {

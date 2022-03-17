@@ -4,6 +4,7 @@ import com.cryptolisting.springreactjs.models.RegistrationRequest;
 import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.util.EmailValidator;
 import com.cryptolisting.springreactjs.util.PasswordValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class RegistrationService {
         user.setRoles("ROLE_USER");
 
         userRepository.save(user);
+
         return true;
     }
 }
