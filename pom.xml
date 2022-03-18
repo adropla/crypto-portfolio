@@ -14,7 +14,7 @@
 	<name>spring-reactjs</name>
 	<description>web app for crypto prices monitoring made with react js and java spring</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
 		<node.version>v16.14.0</node.version>
 		<yarn.version>v1.22.17</yarn.version>
@@ -92,8 +92,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
 			<plugin>
