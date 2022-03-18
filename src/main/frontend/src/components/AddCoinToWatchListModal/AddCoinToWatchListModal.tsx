@@ -28,7 +28,7 @@ import { ICoinListItem, ICoinListWL } from '../../types/ICoinList';
 import {
     useGetCoinsByIdsQuery,
     useGetCoinsListQuery,
-} from '../../services/api';
+} from '../../services/coinGekoApi';
 import useListDataCoins from '../../hooks/useListDataCoins';
 import debounce from '../../utils/debounce';
 import RoundModal from '../../styledComponents/RoundModal';

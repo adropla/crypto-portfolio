@@ -1,5 +1,4 @@
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Form, Input, Typography } from 'antd';
 import RoundModal from '../../styledComponents/RoundModal';
 import { ModalProps } from '../../types/ModalProps';
 import { inputPasswordIconRender } from '../LoginModal/LoginModal';

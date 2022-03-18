@@ -1,6 +1,8 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { FocusEventHandler, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLoginMutation } from '../../services/serverApi';
 import RoundModal from '../../styledComponents/RoundModal';
 import { ModalProps } from '../../types/ModalProps';
 
@@ -16,17 +18,30 @@ const LoginModal = ({
     toogleLoginModal,
     toogleSignUpModal,
 }: ModalProps) => {
+    const [login, result] = useLoginMutation();
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
     const handleOk = () => {
         toogleLoginModal();
     };
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
+    const onFinish = () => {
+        login({ email, password }).then(console.log);
+        console.log(result);
     };
 
     const toSignUpModal = () => {
         toogleSignUpModal();
         toogleLoginModal();
+    };
+
+    const handlePassword: FocusEventHandler<HTMLInputElement> = (e) => {
+        setPassword(e.target.value);
+    };
+
+    const handleEmail: FocusEventHandler<HTMLInputElement> = (e) => {
+        setEmail(e.target.value);
     };
 
     return (
@@ -75,7 +90,7 @@ const LoginModal = ({
                         },
                     ]}
                 >
-                    <Input placeholder="Email" />
+                    <Input placeholder="Email" onChange={handleEmail} />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -87,6 +102,7 @@ const LoginModal = ({
                     ]}
                 >
                     <Input.Password
+                        onChange={handlePassword}
                         type="password"
                         placeholder="Password"
                         iconRender={inputPasswordIconRender}
