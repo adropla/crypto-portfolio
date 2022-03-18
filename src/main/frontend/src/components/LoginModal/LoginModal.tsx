@@ -1,9 +1,4 @@
-import {
-    EyeInvisibleOutlined,
-    EyeTwoTone,
-    LockOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import RoundModal from '../../styledComponents/RoundModal';
@@ -13,16 +8,25 @@ import styles from './LoginModal.module.scss';
 
 const { Text } = Typography;
 
-const inputPasswordIconRender = (passVisible: boolean) =>
+export const inputPasswordIconRender = (passVisible: boolean) =>
     passVisible ? <EyeTwoTone /> : <EyeInvisibleOutlined />;
 
-const LoginModal = ({ visible, toogleModal }: ModalProps) => {
+const LoginModal = ({
+    visible,
+    toogleLoginModal,
+    toogleSignUpModal,
+}: ModalProps) => {
     const handleOk = () => {
-        toogleModal();
+        toogleLoginModal();
     };
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
+    };
+
+    const toSignUpModal = () => {
+        toogleSignUpModal();
+        toogleLoginModal();
     };
 
     return (
@@ -33,7 +37,7 @@ const LoginModal = ({ visible, toogleModal }: ModalProps) => {
             wrapClassName={styles.modalWrapper}
             bodyStyle={{ borderRadius: '50px' }}
             onOk={handleOk}
-            onCancel={() => toogleModal()}
+            onCancel={() => toogleLoginModal()}
             footer={null}
         >
             <Form
@@ -52,10 +56,13 @@ const LoginModal = ({ visible, toogleModal }: ModalProps) => {
                         <Text style={{ fontSize: '14px', color: 'darkgray' }}>
                             Don&apos;t have a account?
                         </Text>
-                        <Link to="/" style={{ fontSize: '14px' }}>
-                            {' '}
-                            Register now!
-                        </Link>
+                        <Button
+                            type="link"
+                            onClick={toSignUpModal}
+                            style={{ fontSize: '14px', padding: '0 0 0 6px' }}
+                        >
+                            Sign Up!
+                        </Button>
                     </Form.Item>
                 </Form.Item>
 
@@ -68,7 +75,7 @@ const LoginModal = ({ visible, toogleModal }: ModalProps) => {
                         },
                     ]}
                 >
-                    <Input prefix={<UserOutlined />} placeholder="Email" />
+                    <Input placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -80,7 +87,6 @@ const LoginModal = ({ visible, toogleModal }: ModalProps) => {
                     ]}
                 >
                     <Input.Password
-                        prefix={<LockOutlined />}
                         type="password"
                         placeholder="Password"
                         iconRender={inputPasswordIconRender}

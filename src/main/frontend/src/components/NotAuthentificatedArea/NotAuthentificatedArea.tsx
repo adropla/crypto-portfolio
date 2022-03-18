@@ -31,11 +31,13 @@ const NotAuthentificatedArea = () => {
             </Button>
             <LoginModal
                 visible={loginModalVisible.modalVisible}
-                toogleModal={loginModalVisible.toogleModal}
+                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleSignUpModal={signupModalVisible.toogleModal}
             />
             <SignUpModal
                 visible={signupModalVisible.modalVisible}
-                toogleModal={signupModalVisible.toogleModal}
+                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleSignUpModal={signupModalVisible.toogleModal}
             />
         </div>
     );

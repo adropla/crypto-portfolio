@@ -1,1 +1,5 @@
-export type ModalProps = { visible: boolean; toogleModal: () => void };
+export type ModalProps = {
+    visible: boolean;
+    toogleLoginModal: () => void;
+    toogleSignUpModal: () => void;
+};
