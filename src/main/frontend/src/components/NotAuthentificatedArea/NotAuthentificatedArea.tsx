@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import useModalVisible from '../../hooks/useModalVisible';
 import LoginModal from '../LoginModal/LoginModal';
+import SignUpModal from '../SignUpModal/SignUpModal';
 
 import styles from './NotAuthentificatedArea.module.scss';
 
@@ -28,7 +29,14 @@ const NotAuthentificatedArea = () => {
             >
                 Sign Up
             </Button>
-            <LoginModal />
+            <LoginModal
+                visible={loginModalVisible.modalVisible}
+                toogleModal={loginModalVisible.toogleModal}
+            />
+            <SignUpModal
+                visible={signupModalVisible.modalVisible}
+                toogleModal={signupModalVisible.toogleModal}
+            />
         </div>
     );
 };

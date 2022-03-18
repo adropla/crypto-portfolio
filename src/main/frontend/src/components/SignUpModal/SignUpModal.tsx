@@ -1,14 +1,18 @@
 import { Modal } from 'antd';
+import { ModalProps } from '../../types/ModalProps';
 
-const SignUpModal = () => {
-    const handleOk = () => {};
+const SignUpModal = ({ visible, toogleModal }: ModalProps) => {
+    const handleOk = () => {
+        toogleModal();
+    };
 
     return (
         <Modal
+            centered
             title="Sign Up"
-            visible={false}
+            visible={visible}
             onOk={handleOk}
-            onCancel={() => {}}
+            onCancel={() => toogleModal()}
         >
             gfds123123
         </Modal>

@@ -31,6 +31,7 @@ import {
 } from '../../services/api';
 import useListDataCoins from '../../hooks/useListDataCoins';
 import debounce from '../../utils/debounce';
+import RoundModal from '../../styledComponents/RoundModal';
 
 const { Search } = Input;
 
@@ -187,7 +188,8 @@ const AddCoinToWatchListModal: FC = () => {
         ));
 
     return (
-        <Modal
+        <RoundModal
+            radius="15px"
             className={styles.modal}
             visible={modalVisible}
             title={<h3 className={styles.title}>Add Coins</h3>}
@@ -246,7 +248,7 @@ const AddCoinToWatchListModal: FC = () => {
                     </List.Item>
                 )}
             />
-        </Modal>
+        </RoundModal>
     );
 };
 
