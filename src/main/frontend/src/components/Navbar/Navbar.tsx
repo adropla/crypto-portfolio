@@ -12,9 +12,9 @@ import Margin from '../common/Margin';
 import MARGIN from '../../constants/margins';
 import { SearchEngine } from '../components';
 import styles from './NavBar.module.scss';
-import AccountPopover from '../AccountPopover/AccountPopover';
 
 import logo from '../../assets/images/logo.png';
+import AccountArea from '../AccountArea/AccountArea';
 
 const Navbar: FC = () => {
     const history = useHistory();
@@ -58,7 +58,7 @@ const Navbar: FC = () => {
                             Watchlist
                         </Menu.Item>
                     </Menu>
-                    <AccountPopover />
+                    <AccountArea />
                 </div>
                 <SearchEngine />
             </div>
