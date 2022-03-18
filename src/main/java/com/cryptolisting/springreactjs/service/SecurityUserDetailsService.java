@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +17,17 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
+    public List<Integer> loadInactiveIds() {
+        List<User> list = userRepository.findAll();
+        List<Integer> ids = new ArrayList<>();
+        list.forEach(u -> {
+            if (!u.isActive()) {
+                ids.add(u.getId());
+            }
+        });
+        return ids;
+    }
 
     public UserDetails loadUserByEmail(String email) {
         return loadUserByUsername(email);

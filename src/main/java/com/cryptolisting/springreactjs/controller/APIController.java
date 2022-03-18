@@ -1,13 +1,7 @@
 package com.cryptolisting.springreactjs.controller;
 
-import com.cryptolisting.springreactjs.models.ConfirmationRequest;
-import com.cryptolisting.springreactjs.models.RegistrationRequest;
-import com.cryptolisting.springreactjs.service.ConfirmationService;
-import com.cryptolisting.springreactjs.service.EmailSender;
-import com.cryptolisting.springreactjs.service.RegistrationService;
-import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
-import com.cryptolisting.springreactjs.models.AuthenticationRequest;
-import com.cryptolisting.springreactjs.models.AuthenticationResponse;
+import com.cryptolisting.springreactjs.models.*;
+import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.cryptolisting.springreactjs.service.EmailService;
 
 import java.security.SignatureException;
 
@@ -46,6 +39,9 @@ public class APIController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserUpdateService userUpdateService;
 
     @GetMapping("")
     public ModelAndView home() {
@@ -116,4 +112,8 @@ public class APIController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    @PutMapping("api/v1/update")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateRequest updateRequest) throws  Exception {
+        return userUpdateService.update(updateRequest);
+    }
 }
