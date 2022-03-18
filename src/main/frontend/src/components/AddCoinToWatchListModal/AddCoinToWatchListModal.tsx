@@ -201,9 +201,7 @@ const AddCoinToWatchListModal: FC = () => {
             footer={[
                 <div
                     key="modal_tags_wrapper"
-                    className={`${styles.tagWrapper} ${
-                        selectedCoins.length ? null : styles.hide
-                    }`}
+                    className={`${styles.tagWrapper}`}
                 >
                     {makeSelectedCoinsTags()}
                 </div>,
