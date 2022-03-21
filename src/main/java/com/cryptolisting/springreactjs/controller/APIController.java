@@ -43,7 +43,7 @@ public class APIController {
     @Autowired
     private UserUpdateService userUpdateService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
         return mav;
