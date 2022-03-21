@@ -61,7 +61,7 @@ public class APIController {
         if (registrationResponse) {
             String email = request.getEmail();
             String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email));
-            emailService.send(email, "<a href=\"https://https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
+            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
