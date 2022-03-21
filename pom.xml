@@ -158,7 +158,7 @@
 						</goals>
 						<phase>prepare-package</phase>
 						<configuration>
-							<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+							<outputDirectory>${project.basedir}/target/classes/static</outputDirectory>
 							<resources>
 								<resource>
 									<directory>${frontend-src-dir}/build</directory>
