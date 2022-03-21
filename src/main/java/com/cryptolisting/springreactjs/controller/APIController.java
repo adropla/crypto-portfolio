@@ -43,6 +43,9 @@ public class APIController {
     @Autowired
     private UserUpdateService userUpdateService;
 
+    @Autowired
+    private WatchlistRepository watchlistRepository;
+
     @GetMapping("")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
@@ -53,6 +56,13 @@ public class APIController {
     @ResponseBody
     public String test() {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
+    }
+
+    @PostMapping("api/v1/watchlist")
+    public ResponseEntity<?> watchlistSave(@RequestBody UserWatchlist watchlist) {
+        watchlistRepository.save(watchlist);
+        return ResponseEntity.ok("Successfully saved watchlist \"" + watchlist.getWatchlist()
+                + "\" for userID -> " + watchlist.getId());
     }
 
     @PostMapping("api/v1/registration")
