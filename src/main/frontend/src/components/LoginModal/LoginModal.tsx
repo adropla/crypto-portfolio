@@ -18,7 +18,7 @@ const LoginModal = ({
     toogleLoginModal,
     toogleSignUpModal,
 }: ModalProps) => {
-    const [login, result] = useLoginMutation();
+    const [loginTrigger, result] = useLoginMutation();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -27,7 +27,7 @@ const LoginModal = ({
     };
 
     const onFinish = () => {
-        login({ email, password }).then(console.log);
+        loginTrigger({ email, password }).then(console.log);
         console.log(result);
     };
 
@@ -46,7 +46,7 @@ const LoginModal = ({
 
     return (
         <RoundModal
-            radius="15px"
+            radius="5px"
             centered
             visible={visible}
             wrapClassName={styles.modalWrapper}

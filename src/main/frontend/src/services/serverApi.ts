@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '../redux/store';
 
-const baseUrl = 'http://localhost:8080/api/v1/';
+const baseUrl = 'https://best-crypto-portfolio.herokuapp.com/api/v1/';
 
 const baseServerQuery = fetchBaseQuery({
     baseUrl,
@@ -11,8 +11,7 @@ const baseServerQuery = fetchBaseQuery({
         if (token) {
             headers.set('authorization', `Bearer ${token}`);
         }
-
-        headers.set('Content-Type', 'application/js1on');
+        headers.set('content-type', 'application/json; charset=UTF-8');
 
         return headers;
     },

@@ -27,7 +27,7 @@ const SignUpModal = ({
 
     return (
         <RoundModal
-            radius="15px"
+            radius="5px"
             centered
             visible={visible}
             wrapClassName={styles.modalWrapper}
