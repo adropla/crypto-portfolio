@@ -14,6 +14,14 @@ public class UserWatchlist {
     @Column
     private String watchlist;
 
+    public UserWatchlist() {
+    }
+
+    public UserWatchlist(int id, String watchlist) {
+        this.id = id;
+        this.watchlist = watchlist;
+    }
+
     public int getId() {
         return id;
     }
