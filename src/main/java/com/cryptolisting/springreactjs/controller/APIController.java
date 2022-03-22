@@ -43,6 +43,9 @@ public class APIController {
     @Autowired
     private UserUpdateService userUpdateService;
 
+    @Autowired
+    private WatchlistRepository watchlistRepository;
+
     @GetMapping("")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
@@ -55,13 +58,20 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+    @PostMapping("api/v1/watchlist")
+    public ResponseEntity<?> watchlistSave(@RequestBody UserWatchlist watchlist) {
+        watchlistRepository.save(watchlist);
+        return ResponseEntity.ok("Successfully saved watchlist \"" + watchlist.getWatchlist()
+                + "\" for userID -> " + watchlist.getId());
+    }
+
     @PostMapping("api/v1/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
             String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email));
-            emailService.send(email, "<a href=\"http://localhost:8080/api/v1/confirmation/" + jwt + "\">link</a>");
+            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
