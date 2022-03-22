@@ -1,38 +1,22 @@
 package com.cryptolisting.springreactjs.controller;
 
-import com.cryptolisting.springreactjs.models.*;
+import com.cryptolisting.springreactjs.models.AuthenticationRequest;
+import com.cryptolisting.springreactjs.models.RegistrationRequest;
+import com.cryptolisting.springreactjs.models.UpdateRequest;
 import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.JwtUtil;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class APIController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private SecurityUserDetailsService userDetailsService;
@@ -52,20 +36,15 @@ public class APIController {
     @Autowired
     private UserUpdateService userUpdateService;
 
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private  JwtUtil jwtUtil;
-
     @Autowired
     private WatchlistService watchlistService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     @GetMapping("")
     public ModelAndView home() {
-        ModelAndView mav = new ModelAndView("index");
-        return mav;
+        return new ModelAndView("index");
     }
 
     @GetMapping("/test")
@@ -111,29 +90,7 @@ public class APIController {
 
     @PostMapping("api/v1/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        System.out.println(authenticationRequest.toString());
-        try {
-            System.out.println(" --- Authentication try starts here --- ");
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
-            );
-            System.out.println("Authentication was successful!");
-        } catch (AuthenticationException ex) {
-            System.out.println("Authentication was NOT successful!");
-            ex.printStackTrace();
-            throw new BadCredentialsException("Wrong email or password, or something happened in the process.");
-        }
-
-        System.out.println("Trying to fetch userDetails from userDetailsService.loadUserByUsername");
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByEmail(authenticationRequest.getEmail());
-
-        System.out.println("Current userDetails: " + userDetails.getUsername());
-
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return authenticationService.authenticate(authenticationRequest);
     }
 
     @PutMapping("api/v1/update")

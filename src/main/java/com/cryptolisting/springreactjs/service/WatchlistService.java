@@ -38,9 +38,7 @@ public class WatchlistService {
 
         try {
             String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            System.out.println(rawJson);
             WatchlistRequest watchlistRequest = new Gson().fromJson(rawJson, WatchlistRequest.class);
-            System.out.println(watchlistRequest.toString());
             watchlist = watchlistRequest.getWatchlist();
         } catch (IOException e) {
             e.printStackTrace();

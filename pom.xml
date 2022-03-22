@@ -113,7 +113,7 @@
 					<nodeVersion>${node.version}</nodeVersion>
 					<yarnVersion>${yarn.version}</yarnVersion>
 					<workingDirectory>${frontend-src-dir}</workingDirectory>
-					<installDirectory>${project.build.directory}</installDirectory>
+					<installDirectory>${project.basedir}/target/classes/static</installDirectory>
 				</configuration>
 
 				<executions>
