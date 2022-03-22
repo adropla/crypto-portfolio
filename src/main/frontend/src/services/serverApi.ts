@@ -23,7 +23,6 @@ export const serverApi = createApi({
         login: build.mutation({
             query: (body: { email: string; password: string }) => ({
                 url: 'authenticate',
-                mode: 'no-cors',
                 method: 'post',
                 body,
             }),
