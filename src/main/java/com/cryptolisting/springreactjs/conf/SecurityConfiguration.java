@@ -1,4 +1,4 @@
-package com.cryptolisting.springreactjs;
+package com.cryptolisting.springreactjs.conf;
 
 import com.cryptolisting.springreactjs.filters.JwtRequestFilter;
 import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
@@ -29,11 +29,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
+
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .antMatchers("/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers( "/", "/*.html", "/api/v1/authenticate",
                         "/api/v1/registration", "/api/v1/confirmation", "/js/**", "/css/**").permitAll().
                 antMatchers("/test").authenticated()

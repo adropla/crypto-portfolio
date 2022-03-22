@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
+@RequestMapping("/")
 public class APIController {
 
     @Autowired
@@ -42,7 +43,7 @@ public class APIController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
     }
