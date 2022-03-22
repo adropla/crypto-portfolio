@@ -3,6 +3,7 @@ package com.cryptolisting.springreactjs.controller;
 import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,19 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.SignatureException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class APIController {
@@ -43,6 +52,16 @@ public class APIController {
     @Autowired
     private UserUpdateService userUpdateService;
 
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private  JwtUtil jwtUtil;
+
+    @Autowired
+    private WatchlistService watchlistService;
+
     @GetMapping("")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
@@ -55,13 +74,18 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+    @PostMapping("api/v1/watchlist/save")
+    public ResponseEntity<?> watchlistSave(HttpServletRequest request) {
+        return watchlistService.save(request);
+    }
+
     @PostMapping("api/v1/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
             String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email));
-            emailService.send(email, "<a href=\"http://localhost:8080/api/v1/confirmation/" + jwt + "\">link</a>");
+            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
