@@ -1,10 +1,11 @@
 package com.cryptolisting.springreactjs.controller;
 
 import com.cryptolisting.springreactjs.models.AuthenticationRequest;
+import com.cryptolisting.springreactjs.models.RefreshTokenRequest;
 import com.cryptolisting.springreactjs.models.RegistrationRequest;
 import com.cryptolisting.springreactjs.models.UpdateRequest;
 import com.cryptolisting.springreactjs.service.*;
-import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class APIController {
     private SecurityUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private AccessTokenUtil jwtTokenUtil;
 
     @Autowired
     private RegistrationService registrationService;
@@ -43,6 +44,9 @@ public class APIController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
@@ -52,6 +56,11 @@ public class APIController {
     @ResponseBody
     public String test() {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
+    }
+
+    @PostMapping("api/v1/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(refreshTokenService.refresh(request));
     }
 
     @PostMapping("api/v1/watchlist/save")
@@ -64,7 +73,7 @@ public class APIController {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
-            String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email));
+            String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
             emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {

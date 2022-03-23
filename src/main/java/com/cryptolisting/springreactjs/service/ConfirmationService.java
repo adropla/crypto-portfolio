@@ -1,27 +1,23 @@
 package com.cryptolisting.springreactjs.service;
 
-import com.cryptolisting.springreactjs.models.SecurityUserDetails;
 import com.cryptolisting.springreactjs.models.User;
-import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class ConfirmationService {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private AccessTokenUtil accessTokenUtil;
 
     @Autowired
     private UserRepository userRepository;
 
     public boolean confirm(String jwt) {
-        String email = jwtUtil.extractEmail(jwt);
+        String email = accessTokenUtil.extractEmail(jwt);
         Optional<User> optional = userRepository.findByEmail(email);
         if (optional.isPresent()) {
             User activatedUser = optional.get();

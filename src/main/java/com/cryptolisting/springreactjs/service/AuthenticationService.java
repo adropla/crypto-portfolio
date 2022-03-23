@@ -2,7 +2,8 @@ package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.AuthenticationRequest;
 import com.cryptolisting.springreactjs.models.AuthenticationResponse;
-import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.cryptolisting.springreactjs.util.AccessTokenUtil;
+import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,10 @@ public class AuthenticationService {
     private SecurityUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private AccessTokenUtil accessTokenUtil;
+
+    @Autowired
+    private RefreshTokenUtil refreshTokenUtil;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,9 +44,10 @@ public class AuthenticationService {
         final UserDetails userDetails = userDetailsService
                 .loadUserByEmail(authenticationRequest.getEmail());
 
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
+        final String accessToken = accessTokenUtil.generateToken(userDetails, 10);
+        final String refreshToken = refreshTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken));
     }
 
 }
