@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -74,8 +75,8 @@ public class APIController {
     }
 
     @PostMapping("api/v1/auth/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(refreshTokenService.refresh(request));
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(refreshTokenService.refresh(request, response));
     }
 
     @PostMapping("api/v1/watchlist/save")
@@ -114,8 +115,9 @@ public class APIController {
     }
 
     @PostMapping("api/v1/auth/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        return authenticationService.authenticate(authenticationRequest);
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws Exception {
+
+        return authenticationService.authenticate(authenticationRequest, response);
     }
 
     @PutMapping("api/v1/user/update")

@@ -13,6 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 public class AuthenticationService {
 
@@ -28,7 +31,7 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest, HttpServletResponse response) {
         System.out.println(authenticationRequest.toString());
         try {
             authenticationManager.authenticate(
@@ -47,7 +50,14 @@ public class AuthenticationService {
         final String accessToken = accessTokenUtil.generateToken(userDetails, 10);
         final String refreshToken = refreshTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken));
+        Cookie cookie = new Cookie("refresh",refreshToken);
+        cookie.setMaxAge(30 * 24 * 60 * 60);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken));
     }
 
 }
