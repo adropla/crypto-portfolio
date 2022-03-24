@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 public class RefreshTokenService {
 
@@ -22,7 +25,7 @@ public class RefreshTokenService {
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
-    public ResponseEntity<?> refresh(RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<?> refresh(RefreshTokenRequest refreshTokenRequest, HttpServletResponse httpResponse) {
         final String refreshToken = refreshTokenRequest.getRefresh();
 
         if (refreshTokenUtil.isTokenExpired(refreshToken)) {
@@ -35,7 +38,15 @@ public class RefreshTokenService {
 
         String accessToken = accessTokenUtil.generateToken(userDetails, 10);
 
-        AuthenticationResponse response = new AuthenticationResponse(accessToken, refreshToken);
+
+        Cookie cookie = new Cookie("refresh",refreshToken);
+        cookie.setMaxAge(30 * 24 * 60 * 60);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        httpResponse.addCookie(cookie);
+
+        AuthenticationResponse response = new AuthenticationResponse(accessToken);
 
         return ResponseEntity.ok(response);
     }

@@ -1,9 +1,6 @@
 package com.cryptolisting.springreactjs.controller;
 
-import com.cryptolisting.springreactjs.models.AuthenticationRequest;
-import com.cryptolisting.springreactjs.models.RefreshTokenRequest;
-import com.cryptolisting.springreactjs.models.RegistrationRequest;
-import com.cryptolisting.springreactjs.models.UpdateRequest;
+import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -47,6 +45,9 @@ public class APIController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
@@ -58,9 +59,24 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
-    @PostMapping("api/v1/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(refreshTokenService.refresh(request));
+    @PostMapping("api/v1/transaction/save")
+    public ResponseEntity<?> transactionSave(@RequestBody TransactionRequest request) {
+        return transactionService.save(request);
+    }
+
+    @PostMapping("api/v1/transaction/load")
+    public ResponseEntity<?> transactionLoad(@RequestBody TransactionLoadRequest request) {
+        return transactionService.loadAllByPortfolioId(request.getPortfolio());
+    }
+
+    @DeleteMapping("api/v1/transaction/delete")
+    public ResponseEntity<?> transactionDelete(@RequestBody IdRequest request) {
+        return transactionService.delete(request.getId());
+    }
+
+    @PostMapping("api/v1/auth/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(refreshTokenService.refresh(request, response));
     }
 
     @PostMapping("api/v1/watchlist/save")
@@ -68,20 +84,20 @@ public class APIController {
         return watchlistService.save(request);
     }
 
-    @PostMapping("api/v1/registration")
+    @PostMapping("api/v1/auth/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
             String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
-            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/confirmation/" + jwt + "\">link</a>");
+            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
-    @GetMapping("api/v1/confirmation/{jwt}")
+    @GetMapping("api/v1/auth/confirmation/{jwt}")
     public ResponseEntity<?> confirmation(@PathVariable String jwt) {
         try {
             if (jwtTokenUtil.isTokenExpired(jwt)) {
@@ -98,12 +114,13 @@ public class APIController {
                 : new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("api/v1/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        return authenticationService.authenticate(authenticationRequest);
+    @PostMapping("api/v1/auth/authenticate")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws Exception {
+
+        return authenticationService.authenticate(authenticationRequest, response);
     }
 
-    @PutMapping("api/v1/update")
+    @PutMapping("api/v1/user/update")
     public ResponseEntity<?> updateUser(@RequestBody UpdateRequest updateRequest) throws  Exception {
         return userUpdateService.update(updateRequest);
     }

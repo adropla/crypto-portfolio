@@ -10,16 +10,16 @@ public class User {
     @GeneratedValue (strategy = GenerationType.AUTO)
     private int id;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private boolean active;
 
-    @Column
+    @Column(nullable = false)
     private String roles;
 
     public int getId() {

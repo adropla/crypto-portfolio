@@ -33,21 +33,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers( "/", "/*.html", "/api/v1/authenticate",
-                        "/api/v1/registration", "/api/v1/confirmation", "/js/**", "/css/**", "api/v1/refresh").permitAll().
-                antMatchers("/test").authenticated()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests().antMatchers( "/", "/api/v1/auth/authenticate",
+                        "/api/v1/auth/registration", "/api/v1/auth/confirmation", "api/v1/auth/refresh").permitAll().
+                antMatchers("/test", "/api/v1/watchlist/save", "/api/v1/transaction/save", "/api/v1/transaction/load").authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

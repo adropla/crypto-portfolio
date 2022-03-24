@@ -6,6 +6,7 @@ import com.cryptolisting.springreactjs.models.WatchlistRequest;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class WatchlistService {
     public ResponseEntity<?> save(HttpServletRequest request) {
 
         String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
         String email, jwt, watchlist = null;
         UserWatchlist userWatchlist = null;
 
