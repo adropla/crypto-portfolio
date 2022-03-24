@@ -48,6 +48,9 @@ public class APIController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private PortfolioService portfolioService;
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
@@ -57,6 +60,11 @@ public class APIController {
     @ResponseBody
     public String test() {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
+    }
+
+    @PostMapping("api/v1/portfolio/save")
+    public ResponseEntity<?> portfolioSave(HttpServletRequest request) {
+        return portfolioService.save(request);
     }
 
     @PostMapping("api/v1/transaction/save")
