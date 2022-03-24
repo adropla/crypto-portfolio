@@ -2,7 +2,7 @@ package com.cryptolisting.springreactjs.filters;
 
 import com.cryptolisting.springreactjs.models.ErrorResponse;
 import com.cryptolisting.springreactjs.service.SecurityUserDetailsService;
-import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
@@ -28,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private SecurityUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private AccessTokenUtil accessTokenUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,12 +41,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
-                email = jwtUtil.extractEmail(jwt);
+                email = accessTokenUtil.extractEmail(jwt);
             }
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByEmail(email);
-                if (jwtUtil.validateToken(jwt, userDetails)) {
+                if (accessTokenUtil.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                             = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken

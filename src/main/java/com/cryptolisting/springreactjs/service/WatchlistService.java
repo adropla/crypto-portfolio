@@ -3,7 +3,7 @@ package com.cryptolisting.springreactjs.service;
 import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.models.UserWatchlist;
 import com.cryptolisting.springreactjs.models.WatchlistRequest;
-import com.cryptolisting.springreactjs.util.JwtUtil;
+import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class WatchlistService {
     private WatchlistRepository watchlistRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private AccessTokenUtil accessTokenUtil;
 
     @Autowired
     private UserRepository userRepository;
@@ -47,7 +47,7 @@ public class WatchlistService {
         try {
             if (authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
-                email = jwtUtil.extractEmail(jwt);
+                email = accessTokenUtil.extractEmail(jwt);
                 Optional<User> user = userRepository.findByEmail(email);
                 user.orElseThrow(() -> new UsernameNotFoundException("User not found."));
                 User userCredentials = user.get();
