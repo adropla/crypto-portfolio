@@ -10,22 +10,22 @@ public class Transaction {
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column
+    @Column(nullable = false)
     private String portfolio;
 
-    @Column
+    @Column(nullable = false)
     private String pair;
 
-    @Column
+    @Column(nullable = false)
     private String date;
 
-    @Column
+    @Column(nullable = false)
     private Double price;
 
-    @Column
+    @Column(nullable = false)
     private Double quantity;
 
-    @Column
+    @Column(nullable = false)
     private String type;
 
     @Override
