@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import useModalVisible from '../../hooks/useModalVisible';
+import ForgotPasswordModal from '../ForgotPasswordModal/ForgotPasswordModal';
 import LoginModal from '../LoginModal/LoginModal';
 import SignUpModal from '../SignUpModal/SignUpModal';
 
@@ -8,6 +9,7 @@ import styles from './NotAuthentificatedArea.module.scss';
 const NotAuthentificatedArea = () => {
     const loginModalVisible = useModalVisible(false);
     const signupModalVisible = useModalVisible(false);
+    const forgotPasswordModalVisible = useModalVisible(false);
 
     const handelLogin = () => {
         loginModalVisible.toogleModal();
@@ -33,11 +35,17 @@ const NotAuthentificatedArea = () => {
                 visible={loginModalVisible.modalVisible}
                 toogleLoginModal={loginModalVisible.toogleModal}
                 toogleSignUpModal={signupModalVisible.toogleModal}
+                toogleForgotModal={forgotPasswordModalVisible.toogleModal}
             />
             <SignUpModal
                 visible={signupModalVisible.modalVisible}
                 toogleLoginModal={loginModalVisible.toogleModal}
                 toogleSignUpModal={signupModalVisible.toogleModal}
+            />
+            <ForgotPasswordModal
+                visible={forgotPasswordModalVisible.modalVisible}
+                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleForgotModal={forgotPasswordModalVisible.toogleModal}
             />
         </div>
     );

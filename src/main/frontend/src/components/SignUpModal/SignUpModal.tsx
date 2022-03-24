@@ -1,6 +1,8 @@
 import { Button, Form, Input, Typography } from 'antd';
+import { useState } from 'react';
+import useAuthentification from '../../hooks/useAuthentification';
 import RoundModal from '../../styledComponents/RoundModal';
-import { ModalProps } from '../../types/ModalProps';
+import { SignupModalProps } from '../../types/ModalProps';
 import { inputPasswordIconRender } from '../LoginModal/LoginModal';
 
 import styles from './SignUpModal.module.scss';
@@ -11,14 +13,20 @@ const SignUpModal = ({
     visible,
     toogleLoginModal,
     toogleSignUpModal,
-}: ModalProps) => {
+}: SignupModalProps) => {
+    const {
+        email,
+        password,
+        handleEmail,
+        handlePassword,
+        handleSecondPassword,
+    } = useAuthentification();
+
     const handleOk = () => {
         toogleSignUpModal();
     };
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-    };
+    const onFinish = () => {};
 
     const toLoginModal = () => {
         toogleSignUpModal();
@@ -66,30 +74,24 @@ const SignUpModal = ({
                     name="email"
                     rules={[
                         {
-                            required: true,
-                            message: 'Please input your Email!',
+                            type: 'email',
+                            message: 'Please input correct Email!',
+                            validateTrigger: 'onSubmit',
                         },
-                    ]}
-                >
-                    <Input placeholder="Enter your email address" />
-                </Form.Item>
-                <Form.Item
-                    name="password"
-                    rules={[
                         {
                             required: true,
-                            message: 'Please input your Password!',
+                            message: 'Please input your Email!',
+                            validateTrigger: 'onSubmit',
                         },
                     ]}
                 >
-                    <Input.Password
-                        type="password"
-                        placeholder="Password"
-                        iconRender={inputPasswordIconRender}
+                    <Input
+                        placeholder="Enter your email address"
+                        onChange={handleEmail}
                     />
                 </Form.Item>
                 <Form.Item
-                    name="password"
+                    name="password1"
                     rules={[
                         {
                             required: true,
@@ -101,6 +103,23 @@ const SignUpModal = ({
                         type="password"
                         placeholder="Password"
                         iconRender={inputPasswordIconRender}
+                        onChange={handlePassword}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="password2"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your Password!',
+                        },
+                    ]}
+                >
+                    <Input.Password
+                        type="password"
+                        placeholder="Password"
+                        iconRender={inputPasswordIconRender}
+                        onChange={handleSecondPassword}
                     />
                 </Form.Item>
 

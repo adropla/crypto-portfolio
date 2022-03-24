@@ -11,7 +11,6 @@ const baseServerQuery = fetchBaseQuery({
         if (token) {
             headers.set('authorization', `Bearer ${token}`);
         }
-        headers.set('content-type', 'application/json; charset=UTF-8');
 
         return headers;
     },
@@ -22,7 +21,21 @@ export const serverApi = createApi({
     endpoints: (build) => ({
         login: build.mutation({
             query: (body: { email: string; password: string }) => ({
-                url: 'authenticate',
+                url: 'auth/authenticate',
+                method: 'post',
+                body,
+            }),
+        }),
+        signup: build.mutation({
+            query: (body: { email: string; password: string }) => ({
+                url: 'auth/registration',
+                method: 'post',
+                body,
+            }),
+        }),
+        refresh: build.mutation({
+            query: (body: { email: string; password: string }) => ({
+                url: 'auth/refresh',
                 method: 'post',
                 body,
             }),
@@ -30,4 +43,5 @@ export const serverApi = createApi({
     }),
 });
 
-export const { useLoginMutation } = serverApi;
+export const { useLoginMutation, useSignupMutation, useRefreshMutation } =
+    serverApi;
