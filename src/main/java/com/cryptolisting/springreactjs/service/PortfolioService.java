@@ -1,8 +1,6 @@
 package com.cryptolisting.springreactjs.service;
 
-import com.cryptolisting.springreactjs.models.User;
-import com.cryptolisting.springreactjs.models.UserWatchlist;
-import com.cryptolisting.springreactjs.models.WatchlistRequest;
+import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +15,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class WatchlistService {
+public class PortfolioService {
 
     @Autowired
-    private WatchlistRepository watchlistRepository;
+    PortfolioRepository portfolioRepository;
 
     @Autowired
-    private AccessTokenUtil accessTokenUtil;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    public WatchlistService() {
-    }
+    AccessTokenUtil accessTokenUtil;
 
     public ResponseEntity<?> save(HttpServletRequest request) {
+
+        Portfolio portfolio = new Portfolio();
 
         String authorizationHeader = request.getHeader("Authorization");
 
@@ -39,13 +33,12 @@ public class WatchlistService {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
-        String email, jwt, watchlist = null;
-        UserWatchlist userWatchlist = null;
+        String email, jwt, name = null;
 
         try {
             String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            WatchlistRequest watchlistRequest = new Gson().fromJson(rawJson, WatchlistRequest.class);
-            watchlist = watchlistRequest.getWatchlist();
+            NameRequest nameRequest = new Gson().fromJson(rawJson, NameRequest.class);
+            name = nameRequest.getName();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,17 +47,20 @@ public class WatchlistService {
             if (authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
                 email = accessTokenUtil.extractEmail(jwt);
-                Optional<User> user = userRepository.findByEmail(email);
-                user.orElseThrow(() -> new UsernameNotFoundException("User not found."));
-                User userCredentials = user.get();
-                userWatchlist = new UserWatchlist(userCredentials.getId(), watchlist);
-                watchlistRepository.save(userWatchlist);
+                if (name != null && email != null) {
+                    portfolio.setName(name);
+                    portfolio.setEmail(email);
+                    portfolioRepository.save(portfolio);
+                } else {
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok("Successfully saved watchlist \"" + userWatchlist.getWatchlist()
-                + "\" for userID -> " + userWatchlist.getId());
+        return ResponseEntity.ok(portfolio.toString() + " was successfully saved!");
     }
+
 }

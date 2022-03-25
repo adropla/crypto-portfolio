@@ -2,13 +2,13 @@ package com.cryptolisting.springreactjs.models;
 
 public class AuthenticationResponse {
 
-    private final String jwt;
+    private final String accessToken;
 
-    public AuthenticationResponse(String jwt) {
-        this.jwt = jwt;
+    public AuthenticationResponse(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getAccessToken() {
+        return accessToken;
     }
 }
