@@ -28,9 +28,10 @@ import { ICoinListItem, ICoinListWL } from '../../types/ICoinList';
 import {
     useGetCoinsByIdsQuery,
     useGetCoinsListQuery,
-} from '../../services/api';
+} from '../../services/coinGekoApi';
 import useListDataCoins from '../../hooks/useListDataCoins';
 import debounce from '../../utils/debounce';
+import RoundModal from '../../styledComponents/RoundModal';
 
 const { Search } = Input;
 
@@ -187,7 +188,8 @@ const AddCoinToWatchListModal: FC = () => {
         ));
 
     return (
-        <Modal
+        <RoundModal
+            radius="15px"
             className={styles.modal}
             visible={modalVisible}
             title={<h3 className={styles.title}>Add Coins</h3>}
@@ -199,9 +201,7 @@ const AddCoinToWatchListModal: FC = () => {
             footer={[
                 <div
                     key="modal_tags_wrapper"
-                    className={`${styles.tagWrapper} ${
-                        selectedCoins.length ? null : styles.hide
-                    }`}
+                    className={`${styles.tagWrapper}`}
                 >
                     {makeSelectedCoinsTags()}
                 </div>,
@@ -246,7 +246,7 @@ const AddCoinToWatchListModal: FC = () => {
                     </List.Item>
                 )}
             />
-        </Modal>
+        </RoundModal>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Spin, Space } from 'antd';
-import { useGetCoinMarketChartByIdQuery } from '../../services/api';
+import { useGetCoinMarketChartByIdQuery } from '../../services/coinGekoApi';
 import MiniChart from './MiniChart';
 import style from './MiniChartStyles.module.scss';
 

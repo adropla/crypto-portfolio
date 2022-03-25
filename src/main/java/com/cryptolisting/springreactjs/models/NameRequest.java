@@ -1,6 +1,7 @@
 package com.cryptolisting.springreactjs.models;
 
 public class NameRequest {
+
     private String name;
 
     public NameRequest() {

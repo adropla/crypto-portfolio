@@ -26,8 +26,6 @@ public class APIController {
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
-    @Autowired
-    private AccessTokenUtil jwtTokenUtil;
 
     @Autowired
     private RegistrationService registrationService;
@@ -58,6 +56,9 @@ public class APIController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private PortfolioService portfolioService;
 
     @GetMapping("/")
     public ModelAndView home() {
@@ -105,6 +106,11 @@ public class APIController {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+      
+    @PostMapping("api/v1/portfolio/save")
+    public ResponseEntity<?> portfolioSave(HttpServletRequest request) {
+        return portfolioService.save(request);
     }
 
     @PostMapping("api/v1/transaction/save")
