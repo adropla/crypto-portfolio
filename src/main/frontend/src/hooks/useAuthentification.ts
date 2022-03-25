@@ -6,7 +6,6 @@ const useAuthentification = () => {
     const [signUpTrigger, signUpResult] = useSignupMutation();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [secondPassword, setSecondPassword] = useState<string>();
 
     const handlePassword: FocusEventHandler<HTMLInputElement> = (e) => {
         setPassword(e.target.value);
@@ -16,10 +15,6 @@ const useAuthentification = () => {
         setEmail(e.target.value);
     };
 
-    const handleSecondPassword: FocusEventHandler<HTMLInputElement> = (e) => {
-        setSecondPassword(e.target.value);
-    };
-
     return {
         loginTrigger,
         signUpTrigger,
@@ -27,7 +22,8 @@ const useAuthentification = () => {
         handleEmail,
         password,
         handlePassword,
-        handleSecondPassword,
+        loginResult,
+        signUpResult,
     };
 };
 

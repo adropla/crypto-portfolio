@@ -4,7 +4,7 @@ import { IUser } from '../../services/serverApi';
 
 const initialState: IUser = {
     accessToken: null,
-    username: null,
+    name: null,
     email: null,
 };
 
@@ -14,15 +14,15 @@ const authSlice = createSlice({
     reducers: {
         setCredentials: (
             state,
-            { payload: { accessToken, username, email } }: PayloadAction<IUser>,
+            { payload: { accessToken, name, email } }: PayloadAction<IUser>,
         ) => {
             state.accessToken = accessToken;
-            state.username = username;
+            state.name = name;
             state.email = email;
         },
         clearCredentials: (state) => {
             state.accessToken = null;
-            state.username = null;
+            state.name = null;
             state.email = null;
         },
     },

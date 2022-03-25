@@ -13,13 +13,12 @@ import styles from './AccountPopover.module.scss';
 const { Text } = Typography;
 
 const AccountPopoverContent = () => {
+    const dispatch = useAppDispatch();
     const username = useAppSelector(selectUsername);
     const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
 
-    const dispatch = useAppDispatch();
-
     const logout = () => {
-        dispatch(clearCredentials);
+        dispatch(clearCredentials());
         removeCookie('refresh');
     };
 

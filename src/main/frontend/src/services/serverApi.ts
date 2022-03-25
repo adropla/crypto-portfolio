@@ -4,7 +4,7 @@ import type { RootState } from '../redux/store';
 export interface IUser {
     accessToken: string | null;
     email: string | null;
-    username: string | null;
+    name: string | null;
 }
 export interface LoginRequest {
     email: string;

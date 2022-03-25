@@ -19,8 +19,14 @@ const LoginModal = ({
     toogleSignUpModal,
     toogleForgotModal,
 }: LoginModalProps) => {
-    const { loginTrigger, email, handleEmail, password, handlePassword } =
-        useAuthentification();
+    const {
+        loginTrigger,
+        email,
+        handleEmail,
+        password,
+        handlePassword,
+        loginResult,
+    } = useAuthentification();
 
     const dispatch = useAppDispatch();
 
@@ -137,6 +143,7 @@ const LoginModal = ({
 
                 <Form.Item noStyle>
                     <Button
+                        loading={loginResult.isLoading}
                         type="primary"
                         htmlType="submit"
                         className={styles.btn}

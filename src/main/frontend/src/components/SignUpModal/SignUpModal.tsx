@@ -18,13 +18,8 @@ const SignUpModal = ({
     toogleLoginModal,
     toogleSignUpModal,
 }: SignupModalProps) => {
-    const {
-        email,
-        password,
-        handleEmail,
-        handlePassword,
-        handleSecondPassword,
-    } = useAuthentification();
+    const { email, password, handleEmail, handlePassword } =
+        useAuthentification();
 
     const [form] = Form.useForm();
 
@@ -141,7 +136,6 @@ const SignUpModal = ({
                         type="password"
                         placeholder="Password"
                         iconRender={inputPasswordIconRender}
-                        onChange={handleSecondPassword}
                     />
                 </Form.Item>
 
