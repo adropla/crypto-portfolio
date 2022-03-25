@@ -44,6 +44,7 @@ public class RegistrationService {
         user.setPassword(passwordEncoder.encode(password));
         user.setActive(false);
         user.setRoles("ROLE_USER");
+        user.setName(email.split("@")[0]);
 
         userRepository.save(user);
 
