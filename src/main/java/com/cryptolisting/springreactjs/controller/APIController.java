@@ -3,15 +3,20 @@ package com.cryptolisting.springreactjs.controller;
 import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -48,6 +53,12 @@ public class APIController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private AccessTokenUtil accessTokenUtil;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
@@ -57,6 +68,43 @@ public class APIController {
     @ResponseBody
     public String test() {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
+    }
+
+    @PutMapping("api/v1/user/name")
+    public ResponseEntity<?> changeName(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        String email, jwt, name = null;
+
+        try {
+            String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            NameRequest nameRequest = new Gson().fromJson(rawJson, NameRequest.class);
+            name = nameRequest.getName();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            if (authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                email = accessTokenUtil.extractEmail(jwt);
+                Optional<User> user = userRepository.findByEmail(email);
+                user.orElseThrow(() -> new UsernameNotFoundException("User not found."));
+                User userCredentials = user.get();
+                userCredentials.setName(name);
+                userRepository.save(userCredentials);
+                return ResponseEntity.ok("ok");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("api/v1/transaction/save")

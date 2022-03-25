@@ -31,6 +31,9 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest, HttpServletResponse response) {
         System.out.println(authenticationRequest.toString());
         try {
@@ -47,6 +50,8 @@ public class AuthenticationService {
         final UserDetails userDetails = userDetailsService
                 .loadUserByEmail(authenticationRequest.getEmail());
 
+        final String name = userRepository.findByEmail(authenticationRequest.getEmail()).get().getName();
+
         final String accessToken = accessTokenUtil.generateToken(userDetails, 10);
         final String refreshToken = refreshTokenUtil.generateToken(userDetails);
 
@@ -57,7 +62,7 @@ public class AuthenticationService {
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new AuthenticationResponse(accessToken));
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken, name));
     }
 
 }
