@@ -1,4 +1,9 @@
 import { Button, Card, Divider, Form, Input, Typography } from 'antd';
+import { useAppSelector } from '../../hooks/redux';
+import {
+    selectEmail,
+    selectUsername,
+} from '../../redux/selectors/authSelectors';
 
 import styles from './AccountSetting.module.scss';
 
@@ -6,21 +11,21 @@ const { Text } = Typography;
 
 const AccountSetting = () => {
     const [form] = Form.useForm();
-    const username = 'user';
-    const email = 'user@iuser.ru';
+    const username = useAppSelector(selectUsername);
+    const email = useAppSelector(selectEmail);
 
     return (
         <Card className={styles.card} title="Account Settings" bordered>
             <Form layout="vertical" form={form}>
                 <Form.Item label="Username" className={styles.formItem}>
-                    <Input value={username} />
+                    <Input value={username || ''} />
                 </Form.Item>
                 <Form.Item
                     label="Email"
                     className={styles.formItem}
                     rules={[{ type: 'email' }]}
                 >
-                    <Input value={email} type="email" />
+                    <Input value={email || ''} type="email" />
                 </Form.Item>
                 <Form.Item style={{ marginBottom: 0 }}>
                     <Button
