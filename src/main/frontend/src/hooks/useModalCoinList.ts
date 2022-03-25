@@ -4,7 +4,7 @@ import {
     useGetCoinsByIdsQuery,
     useGetCoinsListQuery,
     useGetCoinsQuery,
-} from '../services/api';
+} from '../services/coinGekoApi';
 import { ICoinList, ICoinListWL } from '../types/ICoinList';
 
 const useModalCoinList = () => {

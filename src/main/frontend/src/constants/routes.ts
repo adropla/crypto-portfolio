@@ -3,7 +3,8 @@ type typeRoutes = {
     portfolio: string;
     watchlist: string;
     coin: string;
-    exchanges: string,
+    exchanges: string;
+    settings: string;
 };
 
 const ROUTES: typeRoutes = {
@@ -12,6 +13,7 @@ const ROUTES: typeRoutes = {
     watchlist: '/watchlist',
     coin: '/coin',
     exchanges: '/exchanges',
+    settings: '/settings',
 };
 
 export default ROUTES;

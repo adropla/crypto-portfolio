@@ -10,12 +10,14 @@ import {
     REHYDRATE,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { cryptoApi } from '../services/api';
+import { cryptoApi } from '../services/coinGekoApi';
 import watchListReducer from './reducers/watchListSlice';
 import portfoliosReducer from './reducers/portfolioSlice';
 import { ethereumApi } from '../services/ethereumApi';
 import modalSelectedCoinsReducer from './reducers/modalSelectedCoinsSlice';
 import watchListViewReducer from './reducers/watchListViewSlice';
+import authSlice from './reducers/authSlice';
+import { serverApi } from '../services/serverApi';
 
 const persistConfig = {
     key: 'root',
@@ -34,7 +36,9 @@ const rootReducer = combineReducers({
     modalSelectedCoinsReducer,
     watchListViewReducer,
     [ethereumApi.reducerPath]: ethereumApi.reducer,
+    [serverApi.reducerPath]: serverApi.reducer,
     portfolios: portfoliosReducer,
+    authSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
