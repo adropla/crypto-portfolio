@@ -26,7 +26,6 @@ public class APIController {
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
-
     @Autowired
     private RegistrationService registrationService;
 
@@ -143,7 +142,7 @@ public class APIController {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
-            String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
+            String jwt =  accessTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
             emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
@@ -154,14 +153,14 @@ public class APIController {
     @GetMapping("api/v1/auth/confirmation/{jwt}")
     public ResponseEntity<?> confirmation(@PathVariable String jwt) {
         try {
-            if (jwtTokenUtil.isTokenExpired(jwt)) {
+            if (accessTokenUtil.isTokenExpired(jwt)) {
                 return ResponseEntity.ok("Token is expired!");
             };
         } catch(Exception ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        String email = jwtTokenUtil.extractEmail(jwt);
+        String email = accessTokenUtil.extractEmail(jwt);
         boolean confirmationResponse = confirmationService.confirm(jwt);
         return confirmationResponse
                 ? ResponseEntity.ok(email + " was successfully activated!")
