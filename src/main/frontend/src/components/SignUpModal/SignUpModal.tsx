@@ -1,8 +1,12 @@
 import { Button, Form, Input, Typography } from 'antd';
-import { useState } from 'react';
+import { Rule } from 'antd/lib/form';
 import useAuthentification from '../../hooks/useAuthentification';
 import RoundModal from '../../styledComponents/RoundModal';
 import { SignupModalProps } from '../../types/ModalProps';
+import {
+    validateMatchPasswords,
+    validateRegexPassword,
+} from '../../utils/validateForms';
 import { inputPasswordIconRender } from '../LoginModal/LoginModal';
 
 import styles from './SignUpModal.module.scss';
@@ -22,6 +26,8 @@ const SignUpModal = ({
         handleSecondPassword,
     } = useAuthentification();
 
+    const [form] = Form.useForm();
+
     const handleOk = () => {
         toogleSignUpModal();
     };
@@ -31,6 +37,12 @@ const SignUpModal = ({
     const toLoginModal = () => {
         toogleSignUpModal();
         toogleLoginModal();
+        form.resetFields();
+    };
+
+    const onCancel = () => {
+        toogleSignUpModal();
+        form.resetFields();
     };
 
     return (
@@ -41,11 +53,12 @@ const SignUpModal = ({
             wrapClassName={styles.modalWrapper}
             bodyStyle={{ borderRadius: '50px' }}
             onOk={handleOk}
-            onCancel={() => toogleSignUpModal()}
+            onCancel={onCancel}
             footer={null}
         >
             <Form
-                name="normal_login"
+                form={form}
+                name="signup_form"
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -71,7 +84,7 @@ const SignUpModal = ({
                 </Form.Item>
 
                 <Form.Item
-                    name="email"
+                    name="email_signup"
                     rules={[
                         {
                             type: 'email',
@@ -92,11 +105,14 @@ const SignUpModal = ({
                 </Form.Item>
                 <Form.Item
                     name="password1"
+                    dependencies={['password2']}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
                         },
+                        ({ getFieldValue }) =>
+                            validateMatchPasswords(getFieldValue, 'password2'),
                     ]}
                 >
                     <Input.Password
@@ -108,11 +124,17 @@ const SignUpModal = ({
                 </Form.Item>
                 <Form.Item
                     name="password2"
+                    dependencies={['password1']}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
+                            validateTrigger: 'onSubmit',
                         },
+                        ({ getFieldValue }) =>
+                            validateMatchPasswords(getFieldValue, 'password1'),
+                        ({ getFieldValue }) =>
+                            validateRegexPassword(getFieldValue, 'password1'),
                     ]}
                 >
                     <Input.Password

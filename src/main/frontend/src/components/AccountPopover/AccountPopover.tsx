@@ -2,14 +2,26 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button, Popover, Typography, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 
-import ROUTES from '../../constants/routes';
+import { useCookies } from 'react-cookie';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { clearCredentials } from '../../redux/reducers/authSlice';
+import { selectUsername } from '../../redux/selectors/authSelectors';
 
+import ROUTES from '../../constants/routes';
 import styles from './AccountPopover.module.scss';
 
 const { Text } = Typography;
 
 const AccountPopoverContent = () => {
-    const username = 'userfdsagfsadfsdfadsfsadfsdafsdfsda';
+    const username = useAppSelector(selectUsername);
+    const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
+
+    const dispatch = useAppDispatch();
+
+    const logout = () => {
+        dispatch(clearCredentials);
+        removeCookie('refresh');
+    };
 
     return (
         <>
@@ -26,26 +38,24 @@ const AccountPopoverContent = () => {
                     </Link>
                 </div>
             </div>
-            <Button className={styles.btn}>Log out</Button>
+            <Button className={styles.btn} onClick={logout}>
+                Log out
+            </Button>
         </>
     );
 };
 
-const AccountPopover = () => {
-    const isAuth = false;
-
-    return (
-        <Popover content={AccountPopoverContent}>
-            <UserOutlined
-                className={styles.accountIcon}
-                style={{
-                    fontSize: '30px',
-                    marginRight: '20px',
-                    color: 'white',
-                }}
-            />
-        </Popover>
-    );
-};
+const AccountPopover = () => (
+    <Popover content={AccountPopoverContent}>
+        <UserOutlined
+            className={styles.accountIcon}
+            style={{
+                fontSize: '30px',
+                marginRight: '20px',
+                color: 'white',
+            }}
+        />
+    </Popover>
+);
 
 export default AccountPopover;

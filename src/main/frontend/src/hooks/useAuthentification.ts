@@ -22,9 +22,7 @@ const useAuthentification = () => {
 
     return {
         loginTrigger,
-        loginResult,
         signUpTrigger,
-        signUpResult,
         email,
         handleEmail,
         password,

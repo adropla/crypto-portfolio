@@ -23,8 +23,10 @@ const ForgotPasswordModal = ({
     toogleLoginModal,
     toogleForgotModal,
 }: ForgotPasswordModalProps) => {
-    const { loginTrigger, loginResult, email, handleEmail, password } =
+    const { loginTrigger, email, handleEmail, password } =
         useAuthentification();
+
+    const [form] = Form.useForm();
 
     const handleOk = () => {
         toogleLoginModal();
@@ -32,7 +34,6 @@ const ForgotPasswordModal = ({
 
     const onFinish = () => {
         loginTrigger({ email, password });
-        console.log(loginResult);
     };
 
     const toFinishModal = () => {
@@ -43,6 +44,12 @@ const ForgotPasswordModal = ({
     const toLoginModal = () => {
         toogleForgotModal();
         toogleLoginModal();
+        form.resetFields();
+    };
+
+    const onCancel = () => {
+        toogleForgotModal();
+        form.resetFields();
     };
 
     return (
@@ -52,11 +59,12 @@ const ForgotPasswordModal = ({
             visible={visible}
             bodyStyle={{ borderRadius: '50px' }}
             onOk={handleOk}
-            onCancel={() => toogleForgotModal()}
+            onCancel={onCancel}
             footer={null}
         >
             <Form
-                name="normal_login"
+                form={form}
+                name="forgot_form"
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -91,7 +99,7 @@ const ForgotPasswordModal = ({
                     </Form.Item>
                 </Form.Item>
                 <Form.Item
-                    name="email"
+                    name="email_forgot"
                     rules={[
                         {
                             type: 'email',

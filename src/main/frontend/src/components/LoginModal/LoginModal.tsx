@@ -1,8 +1,8 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
-import { FocusEventHandler, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux';
 import useAuthentification from '../../hooks/useAuthentification';
+import { setCredentials } from '../../redux/reducers/authSlice';
 import RoundModal from '../../styledComponents/RoundModal';
 import { LoginModalProps } from '../../types/ModalProps';
 
@@ -19,32 +19,37 @@ const LoginModal = ({
     toogleSignUpModal,
     toogleForgotModal,
 }: LoginModalProps) => {
-    const {
-        loginTrigger,
-        loginResult,
-        email,
-        handleEmail,
-        password,
-        handlePassword,
-    } = useAuthentification();
+    const { loginTrigger, email, handleEmail, password, handlePassword } =
+        useAuthentification();
+
+    const dispatch = useAppDispatch();
+
+    const [form] = Form.useForm();
 
     const handleOk = () => {
         toogleLoginModal();
     };
 
-    const onFinish = () => {
-        loginTrigger({ email, password });
-        console.log(loginResult);
+    const onFinish = async () => {
+        const data = await loginTrigger({ email, password }).unwrap();
+        dispatch(setCredentials({ ...data, email }));
     };
 
     const toSignUpModal = () => {
         toogleSignUpModal();
         toogleLoginModal();
+        form.resetFields();
     };
 
     const toForgotPasswordModal = () => {
         toogleLoginModal();
         toogleForgotModal();
+        form.resetFields();
+    };
+
+    const onCancel = () => {
+        toogleLoginModal();
+        form.resetFields();
     };
 
     return (
@@ -54,11 +59,12 @@ const LoginModal = ({
             visible={visible}
             bodyStyle={{ borderRadius: '50px' }}
             onOk={handleOk}
-            onCancel={() => toogleLoginModal()}
+            onCancel={onCancel}
             footer={null}
         >
             <Form
-                name="normal_login"
+                form={form}
+                name="login_form"
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -84,7 +90,7 @@ const LoginModal = ({
                 </Form.Item>
 
                 <Form.Item
-                    name="email"
+                    name="email_login"
                     rules={[
                         {
                             type: 'email',
