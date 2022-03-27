@@ -27,6 +27,8 @@ const LoginModal = ({
         password,
         handlePassword,
         loginResult,
+        error,
+        setError,
     } = useAuthentification();
 
     const dispatch = useAppDispatch();
@@ -38,14 +40,19 @@ const LoginModal = ({
     };
 
     const onFinish = async () => {
-        const data = await loginTrigger({ email, password }).unwrap();
-        dispatch(setCredentials({ ...data, email }));
+        try {
+            const data = await loginTrigger({ email, password }).unwrap();
+            dispatch(setCredentials({ ...data, email }));
+            return null;
+        } catch (e) {
+            setError(true);
+            return null;
+        }
     };
 
     const loginModalOff = () => {
         toogleLoginModal();
         form.resetFields();
-        dispatch(toogleLoginModalVisible());
     };
 
     const toSignUpModal = () => {
@@ -101,6 +108,7 @@ const LoginModal = ({
 
                 <Form.Item
                     name="email_login"
+                    validateStatus={error ? 'error' : ''}
                     rules={[
                         {
                             type: 'email',
@@ -118,11 +126,25 @@ const LoginModal = ({
                 </Form.Item>
                 <Form.Item
                     name="password"
+                    validateStatus={error ? 'error' : ''}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
                         },
+                        () => ({
+                            validator() {
+                                if (error) {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Email or password are incorrect',
+                                        ),
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
+                            validateTrigger: 'onSubmit',
+                        }),
                     ]}
                 >
                     <Input.Password

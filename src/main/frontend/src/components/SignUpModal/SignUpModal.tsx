@@ -1,5 +1,4 @@
 import { Button, Form, Input, Typography } from 'antd';
-import { Rule } from 'antd/lib/form';
 import useAuthentification from '../../hooks/useAuthentification';
 import RoundModal from '../../styledComponents/RoundModal';
 import { SignupModalProps } from '../../types/ModalProps';
@@ -18,7 +17,7 @@ const SignUpModal = ({
     toogleLoginModal,
     toogleSignUpModal,
 }: SignupModalProps) => {
-    const { email, password, handleEmail, handlePassword } =
+    const { email, password, handleEmail, handlePassword, signUpTrigger } =
         useAuthentification();
 
     const [form] = Form.useForm();
@@ -27,7 +26,9 @@ const SignUpModal = ({
         toogleSignUpModal();
     };
 
-    const onFinish = () => {};
+    const onFinish = async () => {
+        const data = await signUpTrigger({ email, password }).unwrap();
+    };
 
     const toLoginModal = () => {
         toogleSignUpModal();

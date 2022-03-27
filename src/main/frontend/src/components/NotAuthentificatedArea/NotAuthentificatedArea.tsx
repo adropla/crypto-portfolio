@@ -1,7 +1,8 @@
 import { Button } from 'antd';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppSelector } from '../../hooks/redux';
 import useModalVisible from '../../hooks/useModalVisible';
+import { toogleLoginModalVisible } from '../../redux/reducers/loginModalSlice';
 import selectLoginModalVisible from '../../redux/selectors/loginModalSelectors';
 import ForgotPasswordModal from '../ForgotPasswordModal/ForgotPasswordModal';
 import LoginModal from '../LoginModal/LoginModal';
@@ -11,12 +12,12 @@ import styles from './NotAuthentificatedArea.module.scss';
 
 const NotAuthentificatedArea = () => {
     const loginModalVisibleFromStore = useAppSelector(selectLoginModalVisible);
-    const loginModalVisible = useModalVisible(loginModalVisibleFromStore);
+    const loginModalVisible = useModalVisible(false, toogleLoginModalVisible);
     const signupModalVisible = useModalVisible(false);
     const forgotPasswordModalVisible = useModalVisible(false);
 
     const handelLogin = () => {
-        loginModalVisible.toogleModal();
+        loginModalVisible.toogleModalWithStore();
     };
 
     const handleSignup = () => {
@@ -41,18 +42,18 @@ const NotAuthentificatedArea = () => {
             </Button>
             <LoginModal
                 visible={loginModalVisible.modalVisible}
-                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleLoginModal={loginModalVisible.toogleModalWithStore}
                 toogleSignUpModal={signupModalVisible.toogleModal}
                 toogleForgotModal={forgotPasswordModalVisible.toogleModal}
             />
             <SignUpModal
                 visible={signupModalVisible.modalVisible}
-                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleLoginModal={loginModalVisible.toogleModalWithStore}
                 toogleSignUpModal={signupModalVisible.toogleModal}
             />
             <ForgotPasswordModal
                 visible={forgotPasswordModalVisible.modalVisible}
-                toogleLoginModal={loginModalVisible.toogleModal}
+                toogleLoginModal={loginModalVisible.toogleModalWithStore}
                 toogleForgotModal={forgotPasswordModalVisible.toogleModal}
             />
         </div>

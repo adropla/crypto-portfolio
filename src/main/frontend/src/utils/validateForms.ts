@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { RuleObject } from 'antd/lib/form';
 import { NamePath } from 'antd/lib/form/interface';
 

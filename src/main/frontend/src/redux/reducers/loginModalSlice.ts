@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-type Modal = {
+export type Modal = {
     visible: boolean;
 };
 
