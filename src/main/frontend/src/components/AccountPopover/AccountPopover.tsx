@@ -1,5 +1,5 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Button, Popover, Typography, Avatar } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Popover, Typography, Avatar, message } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -17,6 +17,10 @@ const AccountPopoverContent = () => {
 
     const logout = () => {
         dispatch(clearCredentials());
+        message.success({
+            content: 'You are logged out',
+            icon: <LogoutOutlined />,
+        });
     };
 
     return (

@@ -25,7 +25,6 @@ const baseServerQuery = fetchBaseQuery({
 
         return headers;
     },
-    // credentials: 'include',
 });
 
 export const serverApi = createApi({

@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, message, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
 import useAuthentification from '../../hooks/useAuthentification';
@@ -62,6 +62,7 @@ const LoginModal = ({
         try {
             const data = await loginTrigger({ email, password }).unwrap();
             loginModalOff();
+            message.success('You have successefully login!');
             dispatch(setCredentials({ ...data, email }));
             return null;
         } catch (e) {
