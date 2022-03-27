@@ -30,15 +30,18 @@ const SignUpModal = ({
         const data = await signUpTrigger({ email, password }).unwrap();
     };
 
-    const toLoginModal = () => {
+    const signUpModalOff = () => {
         toogleSignUpModal();
-        toogleLoginModal();
         form.resetFields();
     };
 
+    const toLoginModal = () => {
+        signUpModalOff();
+        toogleLoginModal();
+    };
+
     const onCancel = () => {
-        toogleSignUpModal();
-        form.resetFields();
+        signUpModalOff();
     };
 
     return (

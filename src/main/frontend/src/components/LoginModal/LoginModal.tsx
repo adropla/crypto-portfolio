@@ -127,24 +127,12 @@ const LoginModal = ({
                 <Form.Item
                     name="password"
                     validateStatus={error ? 'error' : ''}
+                    help={error ? 'Email or password are incorrect' : ''}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
                         },
-                        () => ({
-                            validator() {
-                                if (error) {
-                                    return Promise.reject(
-                                        new Error(
-                                            'Email or password are incorrect',
-                                        ),
-                                    );
-                                }
-                                return Promise.resolve();
-                            },
-                            validateTrigger: 'onSubmit',
-                        }),
                     ]}
                 >
                     <Input.Password
