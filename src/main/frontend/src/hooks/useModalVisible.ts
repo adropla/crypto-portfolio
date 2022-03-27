@@ -4,13 +4,14 @@ const useModalVisible = (init: boolean) => {
     const [modalVisible, setModalVisible] = useState(init);
 
     const toogleModal = () => {
-        setModalVisible(!modalVisible);
+        setModalVisible((prevState) => !prevState);
         return modalVisible;
     };
 
     return {
         modalVisible,
         toogleModal,
+        setModalVisible,
     };
 };
 

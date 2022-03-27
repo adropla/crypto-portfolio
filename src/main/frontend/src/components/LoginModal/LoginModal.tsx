@@ -3,6 +3,7 @@ import { Button, Checkbox, Form, Input, Typography } from 'antd';
 import { useAppDispatch } from '../../hooks/redux';
 import useAuthentification from '../../hooks/useAuthentification';
 import { setCredentials } from '../../redux/reducers/authSlice';
+import { toogleLoginModalVisible } from '../../redux/reducers/loginModalSlice';
 import RoundModal from '../../styledComponents/RoundModal';
 import { LoginModalProps } from '../../types/ModalProps';
 
@@ -41,21 +42,24 @@ const LoginModal = ({
         dispatch(setCredentials({ ...data, email }));
     };
 
-    const toSignUpModal = () => {
-        toogleSignUpModal();
+    const loginModalOff = () => {
         toogleLoginModal();
         form.resetFields();
+        dispatch(toogleLoginModalVisible());
+    };
+
+    const toSignUpModal = () => {
+        toogleSignUpModal();
+        loginModalOff();
     };
 
     const toForgotPasswordModal = () => {
-        toogleLoginModal();
         toogleForgotModal();
-        form.resetFields();
+        loginModalOff();
     };
 
     const onCancel = () => {
-        toogleLoginModal();
-        form.resetFields();
+        loginModalOff();
     };
 
     return (

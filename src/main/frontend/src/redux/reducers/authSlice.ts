@@ -6,6 +6,7 @@ const initialState: IUser = {
     accessToken: null,
     name: null,
     email: null,
+    isAuth: false,
 };
 
 const authSlice = createSlice({
@@ -19,11 +20,13 @@ const authSlice = createSlice({
             state.accessToken = accessToken;
             state.name = name;
             state.email = email;
+            state.isAuth = true;
         },
         clearCredentials: (state) => {
             state.accessToken = null;
             state.name = null;
             state.email = null;
+            state.isAuth = false;
         },
     },
 });

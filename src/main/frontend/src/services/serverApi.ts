@@ -5,6 +5,7 @@ export interface IUser {
     accessToken: string | null;
     email: string | null;
     name: string | null;
+    isAuth: boolean;
 }
 export interface LoginRequest {
     email: string;
@@ -40,6 +41,13 @@ export const serverApi = createApi({
         signup: build.mutation({
             query: (body) => ({
                 url: 'auth/registration',
+                method: 'post',
+                body,
+            }),
+        }),
+        forgot: build.mutation({
+            query: (body) => ({
+                url: 'user/update',
                 method: 'post',
                 body,
             }),
