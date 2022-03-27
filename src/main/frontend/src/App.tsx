@@ -22,7 +22,6 @@ import { AuthRoute } from './components/AuthRoute/AuthRoute';
 
 const App = () => {
     const isAuth = useAppSelector(selectIsAuth);
-    console.log('render app');
 
     return (
         <Wrapper>
