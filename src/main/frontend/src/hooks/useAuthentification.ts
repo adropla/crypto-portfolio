@@ -1,4 +1,4 @@
-import { FocusEventHandler, useEffect, useState } from 'react';
+import { FocusEventHandler, useEffect, useRef, useState } from 'react';
 import { useLoginMutation, useSignupMutation } from '../services/serverApi';
 
 const useAuthentification = () => {

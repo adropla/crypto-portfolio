@@ -1,9 +1,9 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
+import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
 import useAuthentification from '../../hooks/useAuthentification';
 import { setCredentials } from '../../redux/reducers/authSlice';
-import { toogleLoginModalVisible } from '../../redux/reducers/loginModalSlice';
 import RoundModal from '../../styledComponents/RoundModal';
 import { LoginModalProps } from '../../types/ModalProps';
 
@@ -46,6 +46,7 @@ const LoginModal = ({
             return null;
         } catch (e) {
             setError(true);
+            form.validateFields();
             return null;
         }
     };
@@ -125,14 +126,28 @@ const LoginModal = ({
                     <Input placeholder="Email" onChange={handleEmail} />
                 </Form.Item>
                 <Form.Item
+                    style={{ marginBottom: 0 }}
                     name="password"
                     validateStatus={error ? 'error' : ''}
-                    help={error ? 'Email or password are incorrect' : ''}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
+                            validateTrigger: 'onSubmit',
                         },
+                        () => ({
+                            validator() {
+                                if (error) {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Email or password are incorrect',
+                                        ),
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
+                            validateTrigger: 'onSubmit',
+                        }),
                     ]}
                 >
                     <Input.Password
@@ -142,7 +157,7 @@ const LoginModal = ({
                         iconRender={inputPasswordIconRender}
                     />
                 </Form.Item>
-                <Form.Item name="remember" valuePropName="checked">
+                <Form.Item name="remember" valuePropName="checked" noStyle>
                     <div className={styles.flexWrapper}>
                         <Button
                             onClick={toForgotPasswordModal}
@@ -151,7 +166,6 @@ const LoginModal = ({
                         >
                             Forgot password?
                         </Button>
-                        <Checkbox>Remember me</Checkbox>
                     </div>
                 </Form.Item>
 
