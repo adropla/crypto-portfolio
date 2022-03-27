@@ -39,18 +39,6 @@ const LoginModal = ({
         toogleLoginModal();
     };
 
-    const onFinish = async () => {
-        try {
-            const data = await loginTrigger({ email, password }).unwrap();
-            dispatch(setCredentials({ ...data, email }));
-            return null;
-        } catch (e) {
-            setError(true);
-            form.validateFields();
-            return null;
-        }
-    };
-
     const loginModalOff = () => {
         toogleLoginModal();
         form.resetFields();
@@ -68,6 +56,19 @@ const LoginModal = ({
 
     const onCancel = () => {
         loginModalOff();
+    };
+
+    const onFinish = async () => {
+        try {
+            const data = await loginTrigger({ email, password }).unwrap();
+            loginModalOff();
+            dispatch(setCredentials({ ...data, email }));
+            return null;
+        } catch (e) {
+            setError(true);
+            form.validateFields();
+            return null;
+        }
     };
 
     return (
