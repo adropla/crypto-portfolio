@@ -2,9 +2,11 @@ package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.AuthenticationRequest;
 import com.cryptolisting.springreactjs.models.AuthenticationResponse;
+import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +41,24 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest, HttpServletResponse response) {
+        String email = authenticationRequest.getEmail();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        User user = userOptional.get();
+        if (!user.isActive()) {
+            String jwt =  accessTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
+            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
+            return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
+        }
+
+
         System.out.println(authenticationRequest.toString());
         try {
             authenticationManager.authenticate(
@@ -51,7 +72,7 @@ public class AuthenticationService {
         }
 
         final UserDetails userDetails = userDetailsService
-                .loadUserByEmail(authenticationRequest.getEmail());
+                .loadUserByEmail(email);
 
         final String name = userRepository.findByEmail(authenticationRequest.getEmail()).get().getName();
 
