@@ -70,6 +70,12 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+
+    @GetMapping("api/v1/auth/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        return authenticationService.logout(response);
+    }
+  
     @PostMapping("api/v1/user/reset")
     public ResponseEntity<?> resetPassword(@RequestBody EmailRequest request) {
         return userUpdateService.reset(request.getEmail());

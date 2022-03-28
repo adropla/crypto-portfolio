@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
@@ -91,6 +92,22 @@ public class AuthenticationService {
         response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
 
         return ResponseEntity.ok(new AuthenticationResponse(accessToken, name));
+    }
+
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        final ResponseCookie responseCookie = ResponseCookie
+                .from("refresh", "")
+                .secure(true)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
+
+        return ResponseEntity.ok("Successfully log out!");
     }
 
 }
