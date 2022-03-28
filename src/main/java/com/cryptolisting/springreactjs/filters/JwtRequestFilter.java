@@ -55,9 +55,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (JwtException ex) {
+        } catch (Exception ex) {
             ErrorResponse errorResponse = new ErrorResponse(ex);
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(convertObjectToJson(errorResponse));
         }
     }

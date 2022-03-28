@@ -2,7 +2,7 @@
 /* eslint-disable react/require-default-props */
 import React, { FC, useEffect, useState } from 'react';
 import { SeriesOptionsType } from 'highcharts';
-import { useGetCoinByIdOHLCQuery } from '../../services/api';
+import { useGetCoinByIdOHLCQuery } from '../../services/coinGekoApi';
 import { configureOptions } from './ChartOptions';
 import Chart from './Chart';
 import Loader from '../Loader/Loader';

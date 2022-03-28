@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useAppSelector } from '../../hooks/redux';
 import { selectWatchListIds } from '../../redux/selectors/watchListSelectors';
-import { useGetCoinsByIdsQuery } from '../../services/api';
+import { useGetCoinsByIdsQuery } from '../../services/coinGekoApi';
 import { WatchList } from '../../components/components';
 import useDataCoins from '../../hooks/useDataCoins';
 

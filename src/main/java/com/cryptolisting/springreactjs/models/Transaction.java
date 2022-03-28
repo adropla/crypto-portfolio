@@ -11,7 +11,7 @@ public class Transaction {
     private Integer id;
 
     @Column(nullable = false)
-    private String portfolio;
+    private Integer portfolio;
 
     @Column(nullable = false)
     private String pair;
@@ -49,11 +49,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getPortfolio() {
+    public Integer getPortfolio() {
         return portfolio;
     }
 
-    public void setPortfolio(String portfolio) {
+    public void setPortfolio(Integer portfolio) {
         this.portfolio = portfolio;
     }
 

@@ -3,15 +3,20 @@ package com.cryptolisting.springreactjs.controller;
 import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.service.*;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -20,9 +25,6 @@ public class APIController {
 
     @Autowired
     private SecurityUserDetailsService userDetailsService;
-
-    @Autowired
-    private AccessTokenUtil jwtTokenUtil;
 
     @Autowired
     private RegistrationService registrationService;
@@ -48,6 +50,15 @@ public class APIController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private AccessTokenUtil accessTokenUtil;
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PortfolioService portfolioService;
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
@@ -59,9 +70,77 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+
     @GetMapping("api/v1/auth/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         return authenticationService.logout(response);
+    }
+  
+    @PostMapping("api/v1/user/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody EmailRequest request) {
+        return userUpdateService.reset(request.getEmail());
+    }
+
+    @GetMapping("api/v1/user/reset-confirmation/{jwt}")
+    public ResponseEntity<?> resetConfirmation(@PathVariable String jwt) {
+        return userUpdateService.confirmReset(jwt);
+    }
+
+    @PutMapping("api/v1/user/name")
+    public ResponseEntity<?> changeName(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        String email, jwt, name = null;
+
+        try {
+            String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            NameRequest nameRequest = new Gson().fromJson(rawJson, NameRequest.class);
+            name = nameRequest.getName();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            if (authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                email = accessTokenUtil.extractEmail(jwt);
+                Optional<User> user = userRepository.findByEmail(email);
+                user.orElseThrow(() -> new UsernameNotFoundException("User not found."));
+                User userCredentials = user.get();
+                userCredentials.setName(name);
+                userRepository.save(userCredentials);
+                return ResponseEntity.ok("ok");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+      
+    @PostMapping("api/v1/portfolio/save")
+    public ResponseEntity<?> portfolioSave(HttpServletRequest request) {
+        return portfolioService.save(request);
+    }
+
+    @GetMapping("api/v1/portfolio/load")
+    public ResponseEntity<?> portfolioLoad(HttpServletRequest request) {
+        return portfolioService.load(request);
+    }
+
+    @PutMapping("api/v1/portfolio/change")
+    public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
+        return portfolioService.change(request);
+    }
+  
+    @DeleteMapping("api/v1/portfolio/delete")
+    public ResponseEntity<?> porftolioDelete(HttpServletRequest request) {
+        return portfolioService.delete(request);
     }
 
     @PostMapping("api/v1/transaction/save")
@@ -70,8 +149,8 @@ public class APIController {
     }
 
     @PostMapping("api/v1/transaction/load")
-    public ResponseEntity<?> transactionLoad(@RequestBody TransactionLoadRequest request) {
-        return transactionService.loadAllByPortfolioId(request.getPortfolio());
+    public ResponseEntity<?> transactionLoad(@RequestBody IdRequest request) {
+        return transactionService.loadAllByPortfolioId(request.getId());
     }
 
     @DeleteMapping("api/v1/transaction/delete")
@@ -94,7 +173,7 @@ public class APIController {
         boolean registrationResponse = registrationService.register(request);
         if (registrationResponse) {
             String email = request.getEmail();
-            String jwt =  jwtTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
+            String jwt =  accessTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
             emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
@@ -105,14 +184,14 @@ public class APIController {
     @GetMapping("api/v1/auth/confirmation/{jwt}")
     public ResponseEntity<?> confirmation(@PathVariable String jwt) {
         try {
-            if (jwtTokenUtil.isTokenExpired(jwt)) {
+            if (accessTokenUtil.isTokenExpired(jwt)) {
                 return ResponseEntity.ok("Token is expired!");
             };
         } catch(Exception ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        String email = jwtTokenUtil.extractEmail(jwt);
+        String email = accessTokenUtil.extractEmail(jwt);
         boolean confirmationResponse = confirmationService.confirm(jwt);
         return confirmationResponse
                 ? ResponseEntity.ok(email + " was successfully activated!")

@@ -13,7 +13,8 @@ import MARGIN from '../../constants/margins';
 import { SearchEngine } from '../components';
 import styles from './NavBar.module.scss';
 
-const logo = require('../../assets/images/logo.png');
+import logo from '../../assets/images/logo.png';
+import AccountArea from '../AccountArea/AccountArea';
 
 const Navbar: FC = () => {
     const history = useHistory();
@@ -57,6 +58,7 @@ const Navbar: FC = () => {
                             Watchlist
                         </Menu.Item>
                     </Menu>
+                    <AccountArea />
                 </div>
                 <SearchEngine />
             </div>

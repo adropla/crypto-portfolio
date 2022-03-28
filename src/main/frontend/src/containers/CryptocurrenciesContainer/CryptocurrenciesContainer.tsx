@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useGetCoinsQuery } from '../../services/api';
+import { useGetCoinsQuery } from '../../services/coinGekoApi';
 import { Cryptocurrencies } from '../../components/components';
 import useDataCoins from '../../hooks/useDataCoins';
 
