@@ -112,6 +112,11 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+    @DeleteMapping("api/v1/portfolio/delete")
+    public ResponseEntity<?> porftolioDelete(HttpServletRequest request) {
+        return portfolioService.delete(request);
+    }
+
     @PostMapping("api/v1/transaction/save")
     public ResponseEntity<?> transactionSave(@RequestBody TransactionRequest request) {
         return transactionService.save(request);
