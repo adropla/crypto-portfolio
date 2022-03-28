@@ -112,6 +112,12 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+
+    @PutMapping("api/v1/portfolio/change")
+    public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
+        return portfolioService.change(request);
+    }
+  
     @DeleteMapping("api/v1/portfolio/delete")
     public ResponseEntity<?> porftolioDelete(HttpServletRequest request) {
         return portfolioService.delete(request);
