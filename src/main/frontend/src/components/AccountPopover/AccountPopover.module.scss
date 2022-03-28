@@ -1,0 +1,38 @@
+.accountIcon {
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    border-radius: 100%;
+    border: 1px solid silver;
+    background-color: silver;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        border: 2px solid dodgerblue;
+    }
+}
+
+.popoverWrapper {
+    display: flex;
+    flex-direction: row;
+    .rightSide {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: 16px;
+        .username {
+            font-weight: bold;
+        }
+        .view {
+            color: rgb(134, 133, 133);
+        }
+    }
+}
+
+.btn {
+    margin-top: 10px;
+    width: 100%;
+}

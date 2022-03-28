@@ -3,7 +3,7 @@ import { Select } from 'antd';
 import { BaseOptionType, DefaultOptionType } from 'antd/lib/select';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useGetCoinsListQuery } from '../../services/api';
+import { useGetCoinsListQuery } from '../../services/coinGekoApi';
 import ROUTES from '../../constants/routes';
 import { useAppDispatch } from '../../hooks/redux';
 import { setSelectCoinForTrade } from '../../redux/reducers/portfolioSlice';

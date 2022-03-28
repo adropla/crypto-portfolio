@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useMemo, useState} from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
     DeleteFilled,
     DollarCircleOutlined,
@@ -8,11 +8,21 @@ import {
     StockOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import {Button, DatePicker, Divider, Input, Modal, Radio, RadioChangeEvent, Table, Typography,} from 'antd';
+import {
+    Button,
+    DatePicker,
+    Divider,
+    Input,
+    Modal,
+    Radio,
+    RadioChangeEvent,
+    Table,
+    Typography,
+} from 'antd';
 import Title from 'antd/es/typography/Title';
 import moment from 'moment';
-import {v4 as uuid} from 'uuid';
-import {useSelector} from 'react-redux';
+import { v4 as uuid } from 'uuid';
+import { useSelector } from 'react-redux';
 import styles from './Portfolio.module.scss';
 import Margin from '../common/Margin';
 import MARGIN from '../../constants/margins';
@@ -23,16 +33,23 @@ import {
     PortfolioType,
     removePortfolio,
 } from '../../redux/reducers/portfolioSlice';
-import {useAppDispatch, useAppSelector} from '../../hooks/redux';
-import {selectPortfolios, selectSelectedCoinForTrade,} from '../../redux/selectors/portfolioSelectors';
-import {formatPercent, formatUSDforTable, formatUSDforTableMoney,} from '../../utils/formatters';
-import {SearchEngine} from '../components';
-import {useGetCoinsByIdsQuery} from '../../services/api';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+    selectPortfolios,
+    selectSelectedCoinForTrade,
+} from '../../redux/selectors/portfolioSelectors';
+import {
+    formatPercent,
+    formatUSDforTable,
+    formatUSDforTableMoney,
+} from '../../utils/formatters';
+import { SearchEngine } from '../components';
+import { useGetCoinsByIdsQuery } from '../../services/coinGekoApi';
 import CoinCard from '../CoinCard/CoinCard';
-import {ICoinRaw} from '../../types/ICoin';
-import {Chart} from '../Chart';
+import { ICoinRaw } from '../../types/ICoin';
+import { Chart } from '../Chart';
 import getAveragePrice from '../../utils/getAveragePrice';
-import {ItemDataTypePie, PieChart} from '../PieChart/PieChart';
+import { ItemDataTypePie, PieChart } from '../PieChart/PieChart';
 import getAllInvestMoney from '../../utils/getAllInvestMoney';
 import InfoError from './InfoError';
 
@@ -527,9 +544,9 @@ const Portfolio: FC = () => {
                         key={p.id}
                         className={`
                             ${styles.allPortfolio} ${
-                        p.id === selectedPortfolio &&
+                            p.id === selectedPortfolio &&
                             styles.selectedPortfolio
-                    }
+                        }
                             `}
                         onClick={() => onClickSelectPortfolio(p.id)}
                     >
@@ -588,13 +605,23 @@ const Portfolio: FC = () => {
                             <div>
                                 <div>Profit/Loss</div>
                                 <div className={styles.summary}>
-                                    <span style={{color: portfolio && currentBalance - portfolio.totalSum > 0 ? 'green' : "red"}}>
-                                         {portfolio &&
-                                         formatUSDforTableMoney(
-                                             currentBalance - portfolio.totalSum,
-                                         )}
+                                    <span
+                                        style={{
+                                            color:
+                                                portfolio &&
+                                                currentBalance -
+                                                    portfolio.totalSum >
+                                                    0
+                                                    ? 'green'
+                                                    : 'red',
+                                        }}
+                                    >
+                                        {portfolio &&
+                                            formatUSDforTableMoney(
+                                                currentBalance -
+                                                    portfolio.totalSum,
+                                            )}
                                     </span>
-
                                 </div>
                             </div>
 
