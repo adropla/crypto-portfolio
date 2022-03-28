@@ -66,6 +66,11 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+    @GetMapping("api/v1/portfolio/load")
+    public ResponseEntity<?> portfolioLoad(HttpServletRequest request) {
+        return portfolioService.load(request);
+    }
+
     @PostMapping("api/v1/transaction/save")
     public ResponseEntity<?> transactionSave(@RequestBody TransactionRequest request) {
         return transactionService.save(request);

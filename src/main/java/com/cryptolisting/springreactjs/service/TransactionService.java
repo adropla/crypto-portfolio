@@ -2,6 +2,7 @@ package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.Transaction;
 import com.cryptolisting.springreactjs.models.TransactionRequest;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +43,8 @@ public class TransactionService {
         if (list.size() == 0)
             return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-        StringBuilder str = new StringBuilder();
-
-        list.forEach((transaction) -> {
-            str.append(transaction.toString());
-        });
-
-        return ResponseEntity.ok(list.toString());
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        return ResponseEntity.ok(json);
     }
 }
