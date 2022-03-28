@@ -143,8 +143,8 @@ public class APIController {
     }
 
     @PostMapping("api/v1/transaction/load")
-    public ResponseEntity<?> transactionLoad(@RequestBody TransactionLoadRequest request) {
-        return transactionService.loadAllByPortfolioId(request.getPortfolio());
+    public ResponseEntity<?> transactionLoad(@RequestBody IdRequest request) {
+        return transactionService.loadAllByPortfolioId(request.getId());
     }
 
     @DeleteMapping("api/v1/transaction/delete")
