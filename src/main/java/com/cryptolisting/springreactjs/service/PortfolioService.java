@@ -63,4 +63,20 @@ public class PortfolioService {
         return ResponseEntity.ok(portfolio.toString() + " was successfully saved!");
     }
 
+    public ResponseEntity<?> change(IdNameRequest request) {
+        Integer id = request.getId();
+        String name = request.getName();
+
+        Portfolio portfolio = portfolioRepository.getById(id);
+        portfolio.setName(name);
+
+        try {
+            portfolioRepository.save(portfolio);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(portfolio.toString() + " was successfully updated!");
+    }
+
 }

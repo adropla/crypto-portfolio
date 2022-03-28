@@ -66,6 +66,11 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+    @PutMapping("api/v1/portfolio/change")
+    public ResponseEntity<?> portfolioChange(@RequestBody IdNameRequest request) {
+        return portfolioService.change(request);
+    }
+
     @PostMapping("api/v1/transaction/save")
     public ResponseEntity<?> transactionSave(@RequestBody TransactionRequest request) {
         return transactionService.save(request);
