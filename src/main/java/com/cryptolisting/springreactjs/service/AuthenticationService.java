@@ -7,6 +7,8 @@ import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 @Service
 public class AuthenticationService {
@@ -76,12 +79,16 @@ public class AuthenticationService {
         final String accessToken = accessTokenUtil.generateToken(userDetails, 10);
         final String refreshToken = refreshTokenUtil.generateToken(userDetails);
 
-        Cookie cookie = new Cookie("refresh",refreshToken);
-        cookie.setMaxAge(30 * 24 * 60 * 60);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
+        final ResponseCookie responseCookie = ResponseCookie
+                .from("refresh", refreshToken)
+                .secure(true)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(30 * 24 * 60 * 60)
+                .sameSite("None")
+                .build();
 
-        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
 
         return ResponseEntity.ok(new AuthenticationResponse(accessToken, name));
     }

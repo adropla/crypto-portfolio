@@ -6,7 +6,9 @@ import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -41,14 +43,6 @@ public class RefreshTokenService {
         UserDetails userDetails = userDetailsService.loadUserByEmail(email);
 
         String accessToken = accessTokenUtil.generateToken(userDetails, 10);
-
-
-        Cookie cookie = new Cookie("refresh",refreshToken);
-        cookie.setMaxAge(30 * 24 * 60 * 60);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-
-        httpResponse.addCookie(cookie);
 
         final String name = userRepository.findByEmail(email).get().getName();
 

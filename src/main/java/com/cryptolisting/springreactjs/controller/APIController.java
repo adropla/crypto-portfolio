@@ -70,6 +70,16 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+    @PostMapping("api/v1/user/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody EmailRequest request) {
+        return userUpdateService.reset(request.getEmail());
+    }
+
+    @GetMapping("api/v1/user/reset-confirmation/{jwt}")
+    public ResponseEntity<?> resetConfirmation(@PathVariable String jwt) {
+        return userUpdateService.confirmReset(jwt);
+    }
+
     @PutMapping("api/v1/user/name")
     public ResponseEntity<?> changeName(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -112,6 +122,10 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+    @GetMapping("api/v1/portfolio/load")
+    public ResponseEntity<?> portfolioLoad(HttpServletRequest request) {
+        return portfolioService.load(request);
+    }
 
     @PutMapping("api/v1/portfolio/change")
     public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
@@ -129,8 +143,8 @@ public class APIController {
     }
 
     @PostMapping("api/v1/transaction/load")
-    public ResponseEntity<?> transactionLoad(@RequestBody TransactionLoadRequest request) {
-        return transactionService.loadAllByPortfolioId(request.getPortfolio());
+    public ResponseEntity<?> transactionLoad(@RequestBody IdRequest request) {
+        return transactionService.loadAllByPortfolioId(request.getId());
     }
 
     @DeleteMapping("api/v1/transaction/delete")
