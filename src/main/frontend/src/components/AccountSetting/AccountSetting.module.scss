@@ -1,0 +1,25 @@
+.card {
+    margin: 0 auto;
+    width: 500px;
+    border-radius: 15px;
+}
+
+.formItem {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.btn {
+    margin-bottom: 0;
+    border-radius: 15px;
+}
+
+.footerWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .footerText {
+        font-weight: bold;
+        font-size: 16px;
+    }
+}
