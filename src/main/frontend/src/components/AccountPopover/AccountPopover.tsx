@@ -1,8 +1,7 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Button, Popover, Typography, Avatar } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Popover, Typography, Avatar, message } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { useCookies } from 'react-cookie';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { clearCredentials } from '../../redux/reducers/authSlice';
 import { selectUsername } from '../../redux/selectors/authSelectors';
@@ -15,11 +14,13 @@ const { Text } = Typography;
 const AccountPopoverContent = () => {
     const dispatch = useAppDispatch();
     const username = useAppSelector(selectUsername);
-    const [cookies, setCookie, removeCookie] = useCookies(['refresh']);
 
     const logout = () => {
         dispatch(clearCredentials());
-        removeCookie('refresh');
+        message.success({
+            content: 'You are logged out',
+            icon: <LogoutOutlined />,
+        });
     };
 
     return (

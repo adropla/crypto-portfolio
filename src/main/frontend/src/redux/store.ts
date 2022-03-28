@@ -18,6 +18,7 @@ import modalSelectedCoinsReducer from './reducers/modalSelectedCoinsSlice';
 import watchListViewReducer from './reducers/watchListViewSlice';
 import authSlice from './reducers/authSlice';
 import { serverApi } from '../services/serverApi';
+import loginModalSlice from './reducers/loginModalSlice';
 
 const persistConfig = {
     key: 'root',
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
     [serverApi.reducerPath]: serverApi.reducer,
     portfolios: portfoliosReducer,
     authSlice,
+    loginModalSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -58,7 +60,11 @@ const setupStore = () =>
                         REGISTER,
                     ],
                 },
-            }).concat(cryptoApi.middleware, ethereumApi.middleware),
+            }).concat(
+                cryptoApi.middleware,
+                ethereumApi.middleware,
+                serverApi.middleware,
+            ),
     });
 
 export const store = setupStore();

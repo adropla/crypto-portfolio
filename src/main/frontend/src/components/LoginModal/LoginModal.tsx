@@ -1,5 +1,6 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, message, Typography } from 'antd';
+import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
 import useAuthentification from '../../hooks/useAuthentification';
 import { setCredentials } from '../../redux/reducers/authSlice';
@@ -26,6 +27,8 @@ const LoginModal = ({
         password,
         handlePassword,
         loginResult,
+        error,
+        setError,
     } = useAuthentification();
 
     const dispatch = useAppDispatch();
@@ -36,26 +39,37 @@ const LoginModal = ({
         toogleLoginModal();
     };
 
-    const onFinish = async () => {
-        const data = await loginTrigger({ email, password }).unwrap();
-        dispatch(setCredentials({ ...data, email }));
+    const loginModalOff = () => {
+        toogleLoginModal();
+        form.resetFields();
     };
 
     const toSignUpModal = () => {
         toogleSignUpModal();
-        toogleLoginModal();
-        form.resetFields();
+        loginModalOff();
     };
 
     const toForgotPasswordModal = () => {
-        toogleLoginModal();
         toogleForgotModal();
-        form.resetFields();
+        loginModalOff();
     };
 
     const onCancel = () => {
-        toogleLoginModal();
-        form.resetFields();
+        loginModalOff();
+    };
+
+    const onFinish = async () => {
+        try {
+            const data = await loginTrigger({ email, password }).unwrap();
+            loginModalOff();
+            message.success('You have successefully login!');
+            dispatch(setCredentials({ ...data, email }));
+            return null;
+        } catch (e) {
+            setError(true);
+            form.validateFields();
+            return null;
+        }
     };
 
     return (
@@ -97,6 +111,7 @@ const LoginModal = ({
 
                 <Form.Item
                     name="email_login"
+                    validateStatus={error ? 'error' : ''}
                     rules={[
                         {
                             type: 'email',
@@ -113,12 +128,28 @@ const LoginModal = ({
                     <Input placeholder="Email" onChange={handleEmail} />
                 </Form.Item>
                 <Form.Item
+                    style={{ marginBottom: 0 }}
                     name="password"
+                    validateStatus={error ? 'error' : ''}
                     rules={[
                         {
                             required: true,
                             message: 'Please input your Password!',
+                            validateTrigger: 'onSubmit',
                         },
+                        () => ({
+                            validator() {
+                                if (error) {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Email or password are incorrect',
+                                        ),
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
+                            validateTrigger: 'onSubmit',
+                        }),
                     ]}
                 >
                     <Input.Password
@@ -128,7 +159,7 @@ const LoginModal = ({
                         iconRender={inputPasswordIconRender}
                     />
                 </Form.Item>
-                <Form.Item name="remember" valuePropName="checked">
+                <Form.Item name="remember" valuePropName="checked" noStyle>
                     <div className={styles.flexWrapper}>
                         <Button
                             onClick={toForgotPasswordModal}
@@ -137,7 +168,6 @@ const LoginModal = ({
                         >
                             Forgot password?
                         </Button>
-                        <Checkbox>Remember me</Checkbox>
                     </div>
                 </Form.Item>
 
