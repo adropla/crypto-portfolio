@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import { FC } from 'react';
-import { useGetGlobalStatsQuery } from '../../services/api';
+import { useGetGlobalStatsQuery } from '../../services/coinGekoApi';
 import { useGetEthereumQuery } from '../../services/ethereumApi';
 import { formatPercent, formatUSDNoDecimal } from '../../utils/formatters';
 import styles from './StatBar.module.scss';

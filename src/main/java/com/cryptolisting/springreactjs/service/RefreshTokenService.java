@@ -2,6 +2,7 @@ package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.AuthenticationResponse;
 import com.cryptolisting.springreactjs.models.RefreshTokenRequest;
+import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class RefreshTokenService {
     @Autowired
     private SecurityUserDetailsService userDetailsService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public ResponseEntity<?> refresh(RefreshTokenRequest refreshTokenRequest, HttpServletResponse httpResponse) {
         final String refreshToken = refreshTokenRequest.getRefresh();
 
@@ -40,8 +44,11 @@ public class RefreshTokenService {
 
         String accessToken = accessTokenUtil.generateToken(userDetails, 10);
 
-
         AuthenticationResponse response = new AuthenticationResponse(accessToken);
+
+        final String name = userRepository.findByEmail(email).get().getName();
+
+        AuthenticationResponse response = new AuthenticationResponse(accessToken, name);
 
         return ResponseEntity.ok(response);
     }

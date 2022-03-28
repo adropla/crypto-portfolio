@@ -53,7 +53,10 @@ export const cryptoApi = createApi({
                 createRequest(`/coins/${id}/ohlc?vs_currency=usd&days=${days}`),
         }),
         getCoinById: builder.query<ICoinIdData, string>({
-            query: (coinId) => createRequest(`/coins/${coinId}?tickers=false&community_data=false&developer_data=false`),
+            query: (coinId) =>
+                createRequest(
+                    `/coins/${coinId}?tickers=false&community_data=false&developer_data=false`,
+                ),
         }),
         getCoinMarketChartById: builder.query<ICoinMarketChartById, string>({
             query: (coinId) =>
@@ -65,7 +68,8 @@ export const cryptoApi = createApi({
             query: () => createRequest(`/global`),
         }),
         getExchangesList: builder.query<IExchanges[], IExchangesListRequest>({
-            query: ({ perPage, page }) => createRequest(`exchanges?per_page=${perPage}&page=${page}`),
+            query: ({ perPage, page }) =>
+                createRequest(`exchanges?per_page=${perPage}&page=${page}`),
         }),
     }),
 });

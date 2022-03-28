@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers( "/", "/api/v1/auth/authenticate",
                         "/api/v1/auth/registration", "/api/v1/auth/confirmation", "api/v1/auth/refresh").permitAll().
-                antMatchers("/test", "/api/v1/watchlist/save", "/api/v1/transaction/save", "/api/v1/transaction/load").authenticated()
+                antMatchers("/test", "/api/v1/watchlist/save", "/api/v1/transaction/save", "/api/v1/transaction/load", "/api/v1/portfolio/save").authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

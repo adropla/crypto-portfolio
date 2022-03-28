@@ -28,7 +28,7 @@
 .tagWrapper {
     margin-bottom: 10px;
     display: flex;
-    height: 30px;
+    min-height: 30px;
     overflow-x: scroll;
 
     &::-webkit-scrollbar {

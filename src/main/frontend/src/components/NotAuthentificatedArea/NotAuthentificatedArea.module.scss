@@ -1,0 +1,14 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-right: 15px;
+}
+
+.signupBtn {
+    margin-left: 10px;
+}
+
+.signupBtn,
+.loginBtn {
+    border-radius: 10px;
+}

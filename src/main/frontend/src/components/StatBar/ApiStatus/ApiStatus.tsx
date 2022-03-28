@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import { FC } from 'react';
-import { useGetGlobalStatsQuery } from '../../../services/api';
+import { useGetGlobalStatsQuery } from '../../../services/coinGekoApi';
 import styles from './ApiStatus.module.scss';
 
 const { Text } = Typography;
