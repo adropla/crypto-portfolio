@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,19 +64,49 @@ public class PortfolioService {
         return ResponseEntity.ok(portfolio.toString() + " was successfully saved!");
     }
 
-    public ResponseEntity<?> change(IdNameRequest request) {
-        Integer id = request.getId();
-        String name = request.getName();
+    public ResponseEntity<?> change(HttpServletRequest httprequest) {
+        String authorizationHeader = httprequest.getHeader("Authorization");
 
-        Portfolio portfolio = portfolioRepository.getById(id);
-        portfolio.setName(name);
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        Integer id;
+        String email, jwt, name;
+        IdNameRequest request;
+        Portfolio portfolio = null;
 
         try {
-            portfolioRepository.save(portfolio);
+            String rawJson = httprequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            request = new Gson().fromJson(rawJson, IdNameRequest.class);
+            id = request.getId();
+            name = request.getName();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            if (authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                email = accessTokenUtil.extractEmail(jwt);
+                if (name != null && email != null) {
+                    portfolio = portfolioRepository.getById(id);
+                    if (email.equals(portfolio.getEmail())) {
+                        portfolio.setName(name);
+                        portfolioRepository.save(portfolio);
+                    } else {
+                        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                    }
+                } else {
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return ResponseEntity.ok(portfolio.toString() + " was successfully updated!");
     }
 

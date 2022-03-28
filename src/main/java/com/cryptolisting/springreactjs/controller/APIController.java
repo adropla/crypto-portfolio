@@ -67,7 +67,7 @@ public class APIController {
     }
 
     @PutMapping("api/v1/portfolio/change")
-    public ResponseEntity<?> portfolioChange(@RequestBody IdNameRequest request) {
+    public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
         return portfolioService.change(request);
     }
 
