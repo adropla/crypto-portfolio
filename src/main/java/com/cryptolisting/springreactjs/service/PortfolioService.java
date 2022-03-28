@@ -57,10 +57,53 @@ public class PortfolioService {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return ResponseEntity.ok(portfolio.toString() + " was successfully saved!");
+    }
+
+    public ResponseEntity<?> delete(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        String email, jwt = null;
+        Integer id = null;
+
+        try {
+            String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            IdRequest idRequest = new Gson().fromJson(rawJson, IdRequest.class);
+            id = idRequest.getId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Portfolio portfolio = null;
+
+        try {
+            if (authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                email = accessTokenUtil.extractEmail(jwt);
+                if (id != null && email != null) {
+                    portfolio = portfolioRepository.getById(id);
+                    if (email.equals(portfolio.getEmail())) {
+                        portfolioRepository.delete(portfolio);
+                    } else {
+                        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                    }
+                } else {
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseEntity.ok(portfolio.toString() + " was successfully deleted!");
     }
 
 }
