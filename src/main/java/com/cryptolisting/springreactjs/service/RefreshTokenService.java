@@ -44,8 +44,6 @@ public class RefreshTokenService {
 
         String accessToken = accessTokenUtil.generateToken(userDetails, 10);
 
-        AuthenticationResponse response = new AuthenticationResponse(accessToken);
-
         final String name = userRepository.findByEmail(email).get().getName();
 
         AuthenticationResponse response = new AuthenticationResponse(accessToken, name);
