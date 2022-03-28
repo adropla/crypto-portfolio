@@ -2,7 +2,7 @@ package com.cryptolisting.springreactjs.models;
 
 public class TransactionRequest {
 
-    private String portfolio;
+    private Integer portfolio;
     private String pair;
     private String date;
     private Double price;
@@ -12,7 +12,7 @@ public class TransactionRequest {
     public TransactionRequest() {
     }
 
-    public TransactionRequest(String portfolio, String pair, String date, Double price, Double quantity, String type) {
+    public TransactionRequest(Integer portfolio, String pair, String date, Double price, Double quantity, String type) {
         this.portfolio = portfolio;
         this.pair = pair;
         this.date = date;
@@ -33,11 +33,11 @@ public class TransactionRequest {
                 '}';
     }
 
-    public String getPortfolio() {
+    public Integer getPortfolio() {
         return portfolio;
     }
 
-    public void setPortfolio(String portfolio) {
+    public void setPortfolio(Integer portfolio) {
         this.portfolio = portfolio;
     }
 

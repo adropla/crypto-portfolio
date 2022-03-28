@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.sound.sampled.Port;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -154,5 +155,41 @@ public class PortfolioService {
     }
   
   
+
+    public ResponseEntity<?> load(HttpServletRequest request) {
+        List<Portfolio> list = null;
+
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        String jwt, email;
+
+        try {
+            if (authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+                email = accessTokenUtil.extractEmail(jwt);
+                if (email != null) {
+                    list = portfolioRepository.findByEmail(email);
+
+                    if (list.size() == 0)
+                        return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(list);
+                    return ResponseEntity.ok(json);
+                } else {
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

@@ -112,6 +112,10 @@ public class APIController {
         return portfolioService.save(request);
     }
 
+    @GetMapping("api/v1/portfolio/load")
+    public ResponseEntity<?> portfolioLoad(HttpServletRequest request) {
+        return portfolioService.load(request);
+    }
 
     @PutMapping("api/v1/portfolio/change")
     public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
