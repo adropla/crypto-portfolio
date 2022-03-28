@@ -70,6 +70,16 @@ public class APIController {
         return "<h1>TEST WAS SUCCESSFUL!</h1>";
     }
 
+    @PostMapping("api/v1/user/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody EmailRequest request) {
+        return userUpdateService.reset(request.getEmail());
+    }
+
+    @GetMapping("api/v1/user/reset-confirmation/{jwt}")
+    public ResponseEntity<?> resetConfirmation(@PathVariable String jwt) {
+        return userUpdateService.confirmReset(jwt);
+    }
+
     @PutMapping("api/v1/user/name")
     public ResponseEntity<?> changeName(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");

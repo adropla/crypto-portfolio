@@ -25,6 +25,17 @@ public class User {
     @Column
     private String name;
 
+    @Column
+    private String resetPwd;
+
+    public String getResetPwd() {
+        return resetPwd;
+    }
+
+    public void setResetPwd(String resetPwd) {
+        this.resetPwd = resetPwd;
+    }
+
     public String getName() {
         return name;
     }
