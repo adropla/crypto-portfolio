@@ -41,6 +41,7 @@ public class Transaction {
                 '}';
     }
 
+
     public Integer getId() {
         return id;
     }

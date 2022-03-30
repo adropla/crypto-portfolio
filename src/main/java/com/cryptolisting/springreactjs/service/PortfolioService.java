@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -213,9 +214,9 @@ public class PortfolioService {
         }*/
         //String httpsUrl = "https://api.coingecko.com/api/v3/coins/list";
 
-       HashMap<String, List<HistoricalPrice>> historicalData = portfolioUtil.getHistoricalValues(transactions);
-
-        return ResponseEntity.ok(historicalData);
+       //HashMap<String, List<HistoricalPrice>> historicalData = portfolioUtil.getHistoricalValues(transactions);
+        TreeMap<Long, HashMap<String, Double>> quantites = portfolioUtil.getCurrenciesQuantities(transactions);
+        return ResponseEntity.ok(quantites);
     }
 
 }
