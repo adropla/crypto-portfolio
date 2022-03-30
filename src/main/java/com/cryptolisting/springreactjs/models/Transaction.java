@@ -17,7 +17,7 @@ public class Transaction {
     private String pair;
 
     @Column(nullable = false)
-    private String date;
+    private Long date;
 
     @Column(nullable = false)
     private Double price;
@@ -65,11 +65,11 @@ public class Transaction {
         this.pair = pair;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

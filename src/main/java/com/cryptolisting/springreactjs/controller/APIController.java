@@ -75,7 +75,12 @@ public class APIController {
     public ResponseEntity<?> logout(HttpServletResponse response) {
         return authenticationService.logout(response);
     }
-  
+
+    @PostMapping("api/v1/portfolio/value")
+    public ResponseEntity<?> portfolioValue(@RequestBody IdRequest request) {
+        return portfolioService.getValue(request.getId());
+    }
+
     @PostMapping("api/v1/user/reset")
     public ResponseEntity<?> resetPassword(@RequestBody EmailRequest request) {
         return userUpdateService.reset(request.getEmail());

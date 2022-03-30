@@ -4,7 +4,7 @@ public class TransactionRequest {
 
     private Integer portfolio;
     private String pair;
-    private String date;
+    private Long date;
     private Double price;
     private Double quantity;
     private String type;
@@ -12,7 +12,7 @@ public class TransactionRequest {
     public TransactionRequest() {
     }
 
-    public TransactionRequest(Integer portfolio, String pair, String date, Double price, Double quantity, String type) {
+    public TransactionRequest(Integer portfolio, String pair, Long date, Double price, Double quantity, String type) {
         this.portfolio = portfolio;
         this.pair = pair;
         this.date = date;
@@ -49,11 +49,11 @@ public class TransactionRequest {
         this.pair = pair;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 
