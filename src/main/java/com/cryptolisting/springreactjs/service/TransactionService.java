@@ -63,4 +63,8 @@ public class TransactionService {
         String json = gson.toJson(list);
         return ResponseEntity.ok(json);
     }
+
+    public List<Transaction> getTransactions(Integer portfolioId) {
+        return transactionRepository.findByPortfolio(portfolioId);
+    }
 }

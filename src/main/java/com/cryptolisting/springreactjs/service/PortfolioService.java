@@ -2,6 +2,7 @@ package com.cryptolisting.springreactjs.service;
 
 import com.cryptolisting.springreactjs.models.*;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
+import com.cryptolisting.springreactjs.util.PortfolioUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,9 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.sound.sampled.Port;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +30,12 @@ public class PortfolioService {
 
     @Autowired
     AccessTokenUtil accessTokenUtil;
+
+    @Autowired
+    TransactionService transactionService;
+
+    @Autowired
+    PortfolioUtil portfolioUtil;
 
     public ResponseEntity<?> save(HttpServletRequest request) {
 
@@ -190,6 +202,20 @@ public class PortfolioService {
         }
 
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<?> getValue(Integer id) {
+        List<Transaction> transactions = transactionService.getTransactions(id);
+        /*for (Transaction transaction : transactions) {
+            if (transaction.getType().equals("buy")) {
+                System.out.println(transaction.getDate() + " " + transaction.getPair().split(",")[0] + " " + transaction.getQuantity());
+            }
+        }*/
+        //String httpsUrl = "https://api.coingecko.com/api/v3/coins/list";
+
+       HashMap<String, List<HistoricalPrice>> historicalData = portfolioUtil.getHistoricalValues(transactions);
+
+        return ResponseEntity.ok(historicalData);
     }
 
 }
