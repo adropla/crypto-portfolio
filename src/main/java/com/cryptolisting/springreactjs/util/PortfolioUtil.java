@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PortfolioUtil {
@@ -110,6 +111,47 @@ public class PortfolioUtil {
         }
 
         return prices;
+    }
+
+    public TreeMap<Long, HashMap<String, Double>> getCurrenciesQuantities(List<Transaction> transactions) {
+        List<Transaction> sortedTransactions = transactions.stream()
+                .sorted(Comparator.comparing(Transaction::getDate))
+                .collect(Collectors.toList());
+
+        TreeMap<Long, HashMap<String, Double>> quantites = new TreeMap<>();
+        HashMap<String, Double> current = new HashMap<>();
+
+        for (Transaction transaction : sortedTransactions) {
+            Long date = transaction.getDate();
+            String type = transaction.getType();
+            Double transactionQuantity = transaction.getQuantity();
+            String currency = transaction.getPair().split(",")[0];
+            HashMap<String, Double> data;
+
+            if (quantites.containsKey(date)) {
+                data = quantites.get(date);
+
+            } else {
+                data = new HashMap<>();
+                data.putAll(current);
+            }
+
+            if (data.containsKey(currency)) {
+                Double quantity = data.get(currency);
+                if (type.equals("sell")) {
+                    quantity -= transactionQuantity;
+                } else if (type.equals("buy")) {
+                    quantity += transactionQuantity;
+                }
+                data.put(currency, quantity);
+            } else {
+                data.put(currency, transactionQuantity);
+            }
+
+            quantites.put(date, data);
+            current.putAll(data);
+        }
+        return quantites;
     }
 
 }
