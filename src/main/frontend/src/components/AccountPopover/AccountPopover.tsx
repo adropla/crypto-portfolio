@@ -8,6 +8,7 @@ import { selectUsername } from '../../redux/selectors/authSelectors';
 
 import ROUTES from '../../constants/routes';
 import styles from './AccountPopover.module.scss';
+import { useLogoutMutation } from '../../services/serverApi';
 
 const { Text } = Typography;
 
@@ -15,7 +16,10 @@ const AccountPopoverContent = () => {
     const dispatch = useAppDispatch();
     const username = useAppSelector(selectUsername);
 
+    const [logoutTrigger] = useLogoutMutation();
+
     const logout = () => {
+        logoutTrigger('');
         dispatch(clearCredentials());
         message.success({
             content: 'You are logged out',
