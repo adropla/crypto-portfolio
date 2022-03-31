@@ -152,7 +152,9 @@ public class PortfolioUtil {
 
             TreeMap<Long, Double> portfolioValues = new TreeMap<>();
         try {
+
             List<Long> dates = new ArrayList<>(quantities.keySet());
+
 
             int currentDateIndex = 0;
 
