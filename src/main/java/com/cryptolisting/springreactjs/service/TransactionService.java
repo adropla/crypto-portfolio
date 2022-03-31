@@ -5,14 +5,11 @@ import com.cryptolisting.springreactjs.models.Transaction;
 import com.cryptolisting.springreactjs.models.TransactionRequest;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,9 +39,9 @@ public class TransactionService {
             transaction.setPair(request.getPair());
 
             transactionRepository.save(transaction);
-            return ResponseEntity.ok(request.toString() + " was successfully saved!");
+            return ResponseEntity.ok(request + " was successfully saved!");
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -57,7 +54,7 @@ public class TransactionService {
     public ResponseEntity<?> loadAllByPortfolioId(Integer portfolioId) {
         List<Transaction> list = transactionRepository.findByPortfolio(portfolioId);
         if (list.size() == 0)
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Gson gson = new Gson();
         String json = gson.toJson(list);

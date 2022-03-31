@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SecurityUserDetails implements UserDetails {
-    private String mail;
-    private String password;
-    private boolean active;
-    private List<GrantedAuthority> authorities;
+    private final String mail;
+    private final String password;
+    private final boolean active;
+    private final List<GrantedAuthority> authorities;
 
     public SecurityUserDetails(User user) {
         this.mail = user.getEmail();
