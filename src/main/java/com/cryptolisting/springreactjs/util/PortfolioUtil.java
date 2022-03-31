@@ -154,7 +154,6 @@ public class PortfolioUtil {
             TreeMap<Long, Double> portfolioValues = new TreeMap<>();
         try {
             List<Long> dates = new ArrayList<>(quantities.keySet());
-
             int currentDateIndex = 0;
 
             // prices идут в порядке возрастания, quantities - тоже
@@ -181,6 +180,7 @@ public class PortfolioUtil {
                         continue;
 
                     double portfolioPrice = 0.0;
+
                     if (portfolioValues.containsKey(date)) {
                         portfolioPrice = portfolioValues.get(date);
                     }
