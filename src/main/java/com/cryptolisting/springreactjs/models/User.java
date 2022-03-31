@@ -22,6 +22,28 @@ public class User {
     @Column(nullable = false)
     private String roles;
 
+    @Column
+    private String name;
+
+    @Column
+    private String resetPwd;
+
+    public String getResetPwd() {
+        return resetPwd;
+    }
+
+    public void setResetPwd(String resetPwd) {
+        this.resetPwd = resetPwd;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

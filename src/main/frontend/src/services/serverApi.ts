@@ -51,12 +51,14 @@ export const serverApi = createApi({
                 body,
             }),
         }),
+
         logout: build.mutation({
             query: () => ({
                 url: 'auth/logout',
                 method: 'get',
             }),
         }),
+
         refresh: build.mutation({
             query: (body) => ({
                 url: 'auth/refresh',

@@ -18,6 +18,7 @@ const AccountPopoverContent = () => {
 
     const [logoutTrigger] = useLogoutMutation();
 
+
     const logout = () => {
         logoutTrigger('');
         dispatch(clearCredentials());

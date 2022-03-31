@@ -11,13 +11,13 @@ public class Transaction {
     private Integer id;
 
     @Column(nullable = false)
-    private String portfolio;
+    private Integer portfolio;
 
     @Column(nullable = false)
     private String pair;
 
     @Column(nullable = false)
-    private String date;
+    private Long date;
 
     @Column(nullable = false)
     private Double price;
@@ -41,6 +41,7 @@ public class Transaction {
                 '}';
     }
 
+
     public Integer getId() {
         return id;
     }
@@ -49,11 +50,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public String getPortfolio() {
+    public Integer getPortfolio() {
         return portfolio;
     }
 
-    public void setPortfolio(String portfolio) {
+    public void setPortfolio(Integer portfolio) {
         this.portfolio = portfolio;
     }
 
@@ -65,11 +66,11 @@ public class Transaction {
         this.pair = pair;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

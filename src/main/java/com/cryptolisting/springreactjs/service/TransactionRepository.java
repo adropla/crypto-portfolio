@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     Optional<Transaction> findById(Integer id);
-    List<Transaction> findByPortfolio(String portfolio);
+    List<Transaction> findByPortfolio(Integer portfolio);
 }
