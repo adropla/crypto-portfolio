@@ -91,6 +91,16 @@ public class APIController {
         return userUpdateService.confirmReset(jwt);
     }
 
+    @PutMapping("api/v1/user/email-update")
+    public ResponseEntity<?> emailUpdate(HttpServletRequest request) {
+        return userUpdateService.updateEmail(request);
+    }
+
+    @GetMapping("api/v1/user/email-update-confirmation/{jwt}")
+    public ResponseEntity<?> emailUpdateConfirmation(@PathVariable String jwt) {
+        return userUpdateService.emailUpdateConfirmation(jwt);
+    }
+
     @PutMapping("api/v1/user/name")
     public ResponseEntity<?> changeName(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -138,7 +148,7 @@ public class APIController {
         return portfolioService.load(request);
     }
 
-    @PutMapping("api/v1/portfolio/change")
+    @PutMapping("api/v1/portfolio/password-update")
     public ResponseEntity<?> portfolioChange(HttpServletRequest request) {
         return portfolioService.change(request);
     }
@@ -210,7 +220,7 @@ public class APIController {
     }
 
     @PutMapping("api/v1/user/update")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateRequest updateRequest) throws  Exception {
-        return userUpdateService.update(updateRequest);
+    public ResponseEntity<?> updateUserPassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) throws  Exception {
+        return userUpdateService.updatePassword(passwordUpdateRequest);
     }
 }

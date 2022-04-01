@@ -30,7 +30,7 @@ public class EmailService implements EmailSender {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Email Confirmation");
+            helper.setSubject("crypto-portfolio.com confirmation");
             helper.setFrom("tonsoflions@gmail.com");
             mailSender.send(mimeMessage);
 
