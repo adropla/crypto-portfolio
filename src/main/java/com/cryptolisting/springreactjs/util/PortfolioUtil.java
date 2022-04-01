@@ -3,10 +3,7 @@ package com.cryptolisting.springreactjs.util;
 import com.cryptolisting.springreactjs.models.HistoricalPrice;
 import com.cryptolisting.springreactjs.models.MarketChartRangeResponse;
 import com.cryptolisting.springreactjs.models.Transaction;
-import com.cryptolisting.springreactjs.service.TransactionService;
 import com.google.gson.Gson;
-import com.password4j.Hash;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,9 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class PortfolioUtil {
-
-    @Autowired
-    private TransactionService transactionService;
 
     public HashMap<String, List<HistoricalPrice>> getHistoricalPrices(List<Transaction> transactions) {
         Long firstDate = getFirstDate(transactions);
@@ -55,9 +49,7 @@ public class PortfolioUtil {
 
         for (Transaction transaction : transactions) {
             String currency = transaction.getPair().split(",")[0];
-            if (!currencies.contains(currency)) {
-                currencies.add(currency);
-            }
+            currencies.add(currency);
         }
         return currencies;
     }
@@ -101,7 +93,7 @@ public class PortfolioUtil {
                     date = ((Double) rawDate).longValue();
                 }
 
-                Double price = null;
+                Double price;
                 price = (Double) obj[1];
                 tempPrice.setDate(date);
                 tempPrice.setPrice(price);
@@ -133,8 +125,7 @@ public class PortfolioUtil {
                 data = quantites.get(date);
 
             } else {
-                data = new HashMap<>();
-                data.putAll(current);
+                data = new HashMap<>(current);
             }
 
             if (data.containsKey(currency)) {
@@ -161,10 +152,9 @@ public class PortfolioUtil {
 
             TreeMap<Long, Double> portfolioValues = new TreeMap<>();
         try {
-            List<Long> dates = new ArrayList<>();
-            for (Long key : quantities.keySet()) {
-                dates.add(key);
-            }
+
+            List<Long> dates = new ArrayList<>(quantities.keySet());
+
 
             int currentDateIndex = 0;
 

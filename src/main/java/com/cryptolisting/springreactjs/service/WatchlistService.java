@@ -36,7 +36,7 @@ public class WatchlistService {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         String email, jwt, watchlist = null;
@@ -64,6 +64,7 @@ public class WatchlistService {
             ex.printStackTrace();
         }
 
+        assert userWatchlist != null;
         return ResponseEntity.ok("Successfully saved watchlist \"" + userWatchlist.getWatchlist()
                 + "\" for userID -> " + userWatchlist.getId());
     }
