@@ -1,15 +1,15 @@
 package com.cryptolisting.springreactjs.models;
 
-public class UpdateRequest {
+public class PasswordUpdateRequest {
 
     private String email;
     private String oldPwd;
     private String newPwd;
 
-    public UpdateRequest() {
+    public PasswordUpdateRequest() {
     }
 
-    public UpdateRequest(String email, String oldPwd, String newPwd) {
+    public PasswordUpdateRequest(String email, String oldPwd, String newPwd) {
         this.email = email;
         this.oldPwd = oldPwd;
         this.newPwd = newPwd;
