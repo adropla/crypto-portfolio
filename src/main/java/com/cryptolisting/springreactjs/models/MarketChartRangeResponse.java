@@ -1,6 +1,6 @@
 package com.cryptolisting.springreactjs.models;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class MarketChartRangeResponse {
     private Object[][] prices;
@@ -19,9 +19,9 @@ public class MarketChartRangeResponse {
     @Override
     public String toString() {
         return "MarketChartRangeResponse{" +
-                "prices=" + prices +
-                ", market_caps=" + market_caps +
-                ", total_volumes=" + total_volumes +
+                "prices=" + Arrays.deepToString(prices) +
+                ", market_caps=" + Arrays.deepToString(market_caps) +
+                ", total_volumes=" + Arrays.deepToString(total_volumes) +
                 '}';
     }
 

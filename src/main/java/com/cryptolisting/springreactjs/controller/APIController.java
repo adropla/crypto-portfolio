@@ -106,10 +106,10 @@ public class APIController {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        String email, jwt, name = null;
+        String email, jwt, name;
 
         try {
             String rawJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
@@ -117,7 +117,7 @@ public class APIController {
             name = nameRequest.getName();
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try {
@@ -133,9 +133,9 @@ public class APIController {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
       
     @PostMapping("api/v1/portfolio/save")
@@ -154,7 +154,7 @@ public class APIController {
     }
   
     @DeleteMapping("api/v1/portfolio/delete")
-    public ResponseEntity<?> porftolioDelete(HttpServletRequest request) {
+    public ResponseEntity<?> portfolioDelete(HttpServletRequest request) {
         return portfolioService.delete(request);
     }
 
@@ -174,8 +174,8 @@ public class APIController {
     }
 
     @PostMapping("api/v1/auth/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(refreshTokenService.refresh(request, response));
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(refreshTokenService.refresh(request));
     }
 
     @PostMapping("api/v1/watchlist/save")
@@ -192,7 +192,7 @@ public class APIController {
             emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
             return ResponseEntity.ok("ok");
         } else {
-            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
@@ -201,16 +201,16 @@ public class APIController {
         try {
             if (accessTokenUtil.isTokenExpired(jwt)) {
                 return ResponseEntity.ok("Token is expired!");
-            };
+            }
         } catch(Exception ex) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         String email = accessTokenUtil.extractEmail(jwt);
         boolean confirmationResponse = confirmationService.confirm(jwt);
         return confirmationResponse
                 ? ResponseEntity.ok(email + " was successfully activated!")
-                : new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("api/v1/auth/authenticate")

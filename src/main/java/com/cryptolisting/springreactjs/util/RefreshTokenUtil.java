@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class RefreshTokenUtil {
 
-    private String SECRET_KEY = "r3fr3sh";
+    private final String SECRET_KEY = "r3fr3sh";
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);

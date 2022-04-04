@@ -3,10 +3,7 @@ package com.cryptolisting.springreactjs.util;
 import com.cryptolisting.springreactjs.models.HistoricalPrice;
 import com.cryptolisting.springreactjs.models.MarketChartRangeResponse;
 import com.cryptolisting.springreactjs.models.Transaction;
-import com.cryptolisting.springreactjs.service.TransactionService;
 import com.google.gson.Gson;
-import com.password4j.Hash;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,9 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class PortfolioUtil {
-
-    @Autowired
-    private TransactionService transactionService;
 
     public HashMap<String, List<HistoricalPrice>> getHistoricalPrices(List<Transaction> transactions) {
         Long firstDate = getFirstDate(transactions);
@@ -55,9 +49,7 @@ public class PortfolioUtil {
 
         for (Transaction transaction : transactions) {
             String currency = transaction.getPair().split(",")[0];
-            if (!currencies.contains(currency)) {
-                currencies.add(currency);
-            }
+            currencies.add(currency);
         }
         return currencies;
     }
@@ -91,6 +83,7 @@ public class PortfolioUtil {
         List<HistoricalPrice> prices = new ArrayList<>();
         try {
             MarketChartRangeResponse response = gson.fromJson(json, MarketChartRangeResponse.class);
+            assert response != null;
             Object[][] temp = response.getPrices();
             for (Object[] obj : temp) {
                 HistoricalPrice tempPrice = new HistoricalPrice();
@@ -101,7 +94,7 @@ public class PortfolioUtil {
                     date = ((Double) rawDate).longValue();
                 }
 
-                Double price = null;
+                Double price;
                 price = (Double) obj[1];
                 tempPrice.setDate(date);
                 tempPrice.setPrice(price);
@@ -133,8 +126,7 @@ public class PortfolioUtil {
                 data = quantites.get(date);
 
             } else {
-                data = new HashMap<>();
-                data.putAll(current);
+                data = new HashMap<>(current);
             }
 
             if (data.containsKey(currency)) {
@@ -161,34 +153,34 @@ public class PortfolioUtil {
 
             TreeMap<Long, Double> portfolioValues = new TreeMap<>();
         try {
-            List<Long> dates = new ArrayList<>();
-            for (Long key : quantities.keySet()) {
-                dates.add(key);
-            }
+            List<Long> dates = new ArrayList<>(quantities.keySet());
 
             int currentDateIndex = 0;
 
             // prices идут в порядке возрастания, quantities - тоже
-            Long currentDate = dates.get(0);
-            HashMap<String, Double> currentQ = quantities.get(currentDate);
+            Long currentDate = dates.get(0) * 1000;
+            System.out.println(dates);
+            HashMap<String, Double> currentQ = quantities.get(currentDate / 1000);
 
 
             for (Map.Entry<String, List<HistoricalPrice>> entry : prices.entrySet()) {
+                System.out.println(entry);
                 String currency = entry.getKey();
                 List<HistoricalPrice> pricesList = entry.getValue();
                 for (HistoricalPrice data : pricesList) {
+                    System.out.println(currentQ);
                     Long date = data.getDate();
                     Double currencyPrice = data.getPrice();
-                    if (date > currentDate && currentDateIndex < quantities.size() - 1) {
+                    if (currentDateIndex < dates.size() - 1 && date >= dates.get(currentDateIndex + 1) * 1000) {
                         currentDateIndex++;
-                        currentDate = dates.get(currentDateIndex);
-                        currentQ = quantities.get(currentDate);
+                        currentDate = dates.get(currentDateIndex) * 1000;
+                        currentQ = quantities.get(currentDate / 1000);
                     }
                     Double currencyQuantity = currentQ.get(currency);
                     if (currencyQuantity == null)
                         continue;
 
-                    Double portfolioPrice = 0.0;
+                    double portfolioPrice = 0.0;
                     if (portfolioValues.containsKey(date)) {
                         portfolioPrice = portfolioValues.get(date);
                     }
@@ -199,8 +191,8 @@ public class PortfolioUtil {
                     portfolioValues.put(date, portfolioPrice);
                 }
                 currentDateIndex = 0;
-                currentDate = dates.get(0);
-                currentQ = quantities.get(currentDate);
+                currentDate = dates.get(0) * 1000;
+                currentQ = quantities.get(currentDate / 1000);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
