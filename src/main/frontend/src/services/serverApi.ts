@@ -51,6 +51,14 @@ export const serverApi = createApi({
                 body,
             }),
         }),
+
+        logout: build.mutation({
+            query: () => ({
+                url: 'auth/logout',
+                method: 'get',
+            }),
+        }),
+
         refresh: build.mutation({
             query: (body) => ({
                 url: 'auth/refresh',
@@ -61,5 +69,9 @@ export const serverApi = createApi({
     }),
 });
 
-export const { useLoginMutation, useSignupMutation, useRefreshMutation } =
-    serverApi;
+export const {
+    useLoginMutation,
+    useSignupMutation,
+    useRefreshMutation,
+    useLogoutMutation,
+} = serverApi;
