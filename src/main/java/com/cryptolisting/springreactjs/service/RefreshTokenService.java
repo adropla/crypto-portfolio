@@ -6,15 +6,12 @@ import com.cryptolisting.springreactjs.models.User;
 import com.cryptolisting.springreactjs.util.AccessTokenUtil;
 import com.cryptolisting.springreactjs.util.RefreshTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Service
 public class RefreshTokenService {
@@ -31,11 +28,11 @@ public class RefreshTokenService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<?> refresh(RefreshTokenRequest refreshTokenRequest, HttpServletResponse httpResponse) {
+    public ResponseEntity<?> refresh(RefreshTokenRequest refreshTokenRequest) {
         final String refreshToken = refreshTokenRequest.getRefresh();
 
         if (refreshTokenUtil.isTokenExpired(refreshToken)) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         String email = refreshTokenUtil.extractEmail(refreshToken);
@@ -44,7 +41,14 @@ public class RefreshTokenService {
 
         String accessToken = accessTokenUtil.generateToken(userDetails, 10);
 
-        final String name = userRepository.findByEmail(email).get().getName();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        User user = userOptional.get();
+        final String name = user.getName();
 
         AuthenticationResponse response = new AuthenticationResponse(accessToken, name);
 

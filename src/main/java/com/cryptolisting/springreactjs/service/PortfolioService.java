@@ -7,19 +7,12 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
-import javax.sound.sampled.Port;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -45,7 +38,7 @@ public class PortfolioService {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         String email, jwt, name = null;
@@ -67,22 +60,22 @@ public class PortfolioService {
                     portfolio.setEmail(email);
                     portfolioRepository.save(portfolio);
                 } else {
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(portfolio.toString() + " was successfully saved!");
+        return ResponseEntity.ok(portfolio + " was successfully saved!");
     }
   
   public ResponseEntity<?> change(HttpServletRequest httprequest) {
         String authorizationHeader = httprequest.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         Integer id;
@@ -97,7 +90,7 @@ public class PortfolioService {
             name = request.getName();
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
@@ -110,28 +103,29 @@ public class PortfolioService {
                         portfolio.setName(name);
                         portfolioRepository.save(portfolio);
                     } else {
-                        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                     }
                 } else {
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(portfolio.toString() + " was successfully updated!");
+      assert portfolio != null;
+      return ResponseEntity.ok(portfolio + " was successfully updated!");
     }
   
   public ResponseEntity<?> delete(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        String email, jwt = null;
+        String email, jwt;
         Integer id = null;
 
         try {
@@ -153,29 +147,30 @@ public class PortfolioService {
                     if (email.equals(portfolio.getEmail())) {
                         portfolioRepository.delete(portfolio);
                     } else {
-                        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                     }
                 } else {
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(portfolio.toString() + " was successfully deleted!");
+      assert portfolio != null;
+      return ResponseEntity.ok(portfolio + " was successfully deleted!");
     }
   
   
 
     public ResponseEntity<?> load(HttpServletRequest request) {
-        List<Portfolio> list = null;
+        List<Portfolio> list;
 
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         String jwt, email;
@@ -188,33 +183,26 @@ public class PortfolioService {
                     list = portfolioRepository.findByEmail(email);
 
                     if (list.size() == 0)
-                        return new ResponseEntity(HttpStatus.NOT_FOUND);
+                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
                     Gson gson = new Gson();
                     String json = gson.toJson(list);
                     return ResponseEntity.ok(json);
                 } else {
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity<?> getValue(Integer id) {
         List<Transaction> transactions = transactionService.getTransactions(id);
-        /*for (Transaction transaction : transactions) {
-            if (transaction.getType().equals("buy")) {
-                System.out.println(transaction.getDate() + " " + transaction.getPair().split(",")[0] + " " + transaction.getQuantity());
-            }
-        }*/
-        //String httpsUrl = "https://api.coingecko.com/api/v3/coins/list";
-
-       //HashMap<String, List<HistoricalPrice>> historicalData = portfolioUtil.getHistoricalValues(transactions);
+        HashMap<String, List<HistoricalPrice>> historicalPrices = portfolioUtil.getHistoricalPrices(transactions);
         TreeMap<Long, HashMap<String, Double>> quantites = portfolioUtil.getCurrenciesQuantities(transactions);
         return ResponseEntity.ok(quantites);
     }

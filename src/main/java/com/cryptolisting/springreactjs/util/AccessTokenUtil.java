@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class AccessTokenUtil {
 
-    private String SECRET_KEY = "p01ytech";
+    private final String SECRET_KEY = "p01ytech";
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -45,7 +45,7 @@ public class AccessTokenUtil {
 
     private String createToken(Map<String, Object> claims, String subject, int expiration) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * expiration))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
