@@ -133,8 +133,6 @@ public class PortfolioUtil {
                 Double quantity = data.get(currency);
                 if (type.equals("sell")) {
                     quantity -= transactionQuantity;
-                    if (quantity < 0)
-                        quantity = 0.0;
                 } else if (type.equals("buy")) {
                     quantity += transactionQuantity;
                 }
@@ -148,6 +146,7 @@ public class PortfolioUtil {
         }
         return quantites;
     }
+
 
     public TreeMap<Long, Double> getPortfolioHistoryValue(HashMap<String, List<HistoricalPrice>> prices, TreeMap<Long, HashMap<String, Double>> quantities) {
 

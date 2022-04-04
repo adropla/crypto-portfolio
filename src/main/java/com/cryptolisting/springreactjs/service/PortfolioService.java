@@ -204,8 +204,7 @@ public class PortfolioService {
         List<Transaction> transactions = transactionService.getTransactions(id);
         HashMap<String, List<HistoricalPrice>> historicalPrices = portfolioUtil.getHistoricalPrices(transactions);
         TreeMap<Long, HashMap<String, Double>> quantites = portfolioUtil.getCurrenciesQuantities(transactions);
-        TreeMap<Long, Double> values = portfolioUtil.getPortfolioHistoryValue(historicalPrices, quantites);
-        return ResponseEntity.ok(values);
+        return ResponseEntity.ok(quantites);
     }
 
 }

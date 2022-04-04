@@ -4,8 +4,8 @@ import java.util.List;
 
 public class AuthorizationResponse {
 
-    private Enum<ResponseCodes> status;
-    private String message;
+    private final Enum<ResponseCodes> status;
+    private final String message;
     private List<Object> data;
 
     public AuthorizationResponse(Enum<ResponseCodes> status, String message) {
