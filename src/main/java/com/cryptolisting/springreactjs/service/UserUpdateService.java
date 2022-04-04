@@ -56,7 +56,7 @@ public class UserUpdateService {
             return ResponseEntity.ok("Updated without any errors.");
         }
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -124,7 +124,7 @@ public class UserUpdateService {
         String newPassword = pwdGenerator.generate();
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         User user = userOptional.get();
         user.setResetPwd(passwordEncoder.encode(newPassword));
@@ -140,15 +140,15 @@ public class UserUpdateService {
         try {
             if (accessTokenUtil.isTokenExpired(jwt)) {
                 return ResponseEntity.ok("Token is expired!");
-            };
+            }
         } catch(Exception ex) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         String email = accessTokenUtil.extractEmail(jwt);
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         User user = userOptional.get();
         user.setPassword(user.getResetPwd());

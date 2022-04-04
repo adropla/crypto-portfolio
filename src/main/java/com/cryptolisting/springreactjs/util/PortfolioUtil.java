@@ -5,7 +5,6 @@ import com.cryptolisting.springreactjs.models.MarketChartRangeResponse;
 import com.cryptolisting.springreactjs.models.Transaction;
 import com.cryptolisting.springreactjs.service.TransactionService;
 import com.google.gson.Gson;
-import com.password4j.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class PortfolioUtil {
     @Autowired
     private TransactionService transactionService;
 
-    public HashMap<String, List<HistoricalPrice>> getHistoricalPrices(List<Transaction> transactions) {
+    public HashMap<String, List<HistoricalPrice>> getHistoricalValues(List<Transaction> transactions) {
         Long firstDate = getFirstDate(transactions);
         HashSet<String> currencies = getCurrencies(transactions);
 
@@ -141,8 +140,6 @@ public class PortfolioUtil {
                 Double quantity = data.get(currency);
                 if (type.equals("sell")) {
                     quantity -= transactionQuantity;
-                    if (quantity < 0)
-                        quantity = 0.0;
                 } else if (type.equals("buy")) {
                     quantity += transactionQuantity;
                 }
@@ -157,55 +154,4 @@ public class PortfolioUtil {
         return quantites;
     }
 
-    public TreeMap<Long, Double> getPortfolioHistoryValue(HashMap<String, List<HistoricalPrice>> prices, TreeMap<Long, HashMap<String, Double>> quantities) {
-
-            TreeMap<Long, Double> portfolioValues = new TreeMap<>();
-        try {
-            List<Long> dates = new ArrayList<>();
-            for (Long key : quantities.keySet()) {
-                dates.add(key);
-            }
-
-            int currentDateIndex = 0;
-
-            // prices идут в порядке возрастания, quantities - тоже
-            Long currentDate = dates.get(0);
-            HashMap<String, Double> currentQ = quantities.get(currentDate);
-
-
-            for (Map.Entry<String, List<HistoricalPrice>> entry : prices.entrySet()) {
-                String currency = entry.getKey();
-                List<HistoricalPrice> pricesList = entry.getValue();
-                for (HistoricalPrice data : pricesList) {
-                    Long date = data.getDate();
-                    Double currencyPrice = data.getPrice();
-                    if (date > currentDate && currentDateIndex < quantities.size() - 1) {
-                        currentDateIndex++;
-                        currentDate = dates.get(currentDateIndex);
-                        currentQ = quantities.get(currentDate);
-                    }
-                    Double currencyQuantity = currentQ.get(currency);
-                    if (currencyQuantity == null)
-                        continue;
-
-                    Double portfolioPrice = 0.0;
-                    if (portfolioValues.containsKey(date)) {
-                        portfolioPrice = portfolioValues.get(date);
-                    }
-                    portfolioPrice += currencyPrice * currencyQuantity;
-                    if (portfolioPrice < 0) {
-                        portfolioPrice = 0.0;
-                    }
-                    portfolioValues.put(date, portfolioPrice);
-                }
-                currentDateIndex = 0;
-                currentDate = dates.get(0);
-                currentQ = quantities.get(currentDate);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return portfolioValues;
-    }
 }

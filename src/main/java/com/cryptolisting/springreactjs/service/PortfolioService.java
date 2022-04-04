@@ -214,10 +214,9 @@ public class PortfolioService {
         }*/
         //String httpsUrl = "https://api.coingecko.com/api/v3/coins/list";
 
-        HashMap<String, List<HistoricalPrice>> historicalPrices = portfolioUtil.getHistoricalPrices(transactions);
+       //HashMap<String, List<HistoricalPrice>> historicalData = portfolioUtil.getHistoricalValues(transactions);
         TreeMap<Long, HashMap<String, Double>> quantites = portfolioUtil.getCurrenciesQuantities(transactions);
-        TreeMap<Long, Double> values = portfolioUtil.getPortfolioHistoryValue(historicalPrices, quantites);
-        return ResponseEntity.ok(values);
+        return ResponseEntity.ok(quantites);
     }
 
 }
