@@ -12,6 +12,14 @@ public class RegistrationRequest {
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "RegistrationRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
     public String getEmail() {
         return email;
     }

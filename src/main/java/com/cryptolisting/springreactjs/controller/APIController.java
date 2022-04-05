@@ -185,15 +185,7 @@ public class APIController {
 
     @PostMapping("api/v1/auth/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequest request) {
-        boolean registrationResponse = registrationService.register(request);
-        if (registrationResponse) {
-            String email = request.getEmail();
-            String jwt =  accessTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
-            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
-            return ResponseEntity.ok("ok");
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
+        return registrationService.register(request);
     }
 
     @GetMapping("api/v1/auth/confirmation/{jwt}")
