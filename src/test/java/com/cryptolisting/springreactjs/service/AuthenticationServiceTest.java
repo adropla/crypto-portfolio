@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,16 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AuthenticationServiceTest {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private AuthenticationService authenticationService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RegistrationService registrationService;
 
     @Autowired
     private AccessTokenUtil accessTokenUtil;
