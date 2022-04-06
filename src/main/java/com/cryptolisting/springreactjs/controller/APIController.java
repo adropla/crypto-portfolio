@@ -190,19 +190,7 @@ public class APIController {
 
     @GetMapping("api/v1/auth/confirmation/{jwt}")
     public ResponseEntity<?> confirmation(@PathVariable String jwt) {
-        try {
-            if (accessTokenUtil.isTokenExpired(jwt)) {
-                return ResponseEntity.ok("Token is expired!");
-            }
-        } catch(Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        String email = accessTokenUtil.extractEmail(jwt);
-        boolean confirmationResponse = confirmationService.confirm(jwt);
-        return confirmationResponse
-                ? ResponseEntity.ok(email + " was successfully activated!")
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return confirmationService.confirm(jwt);
     }
 
     @PostMapping("api/v1/auth/authenticate")

@@ -51,7 +51,7 @@ public class AuthenticationService {
         User user = userOptional.get();
         if (!user.isActive()) {
             String jwt =  accessTokenUtil.generateToken(userDetailsService.loadUserByEmail(email), 10);
-            emailService.send(email, "<a href=\"https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt + "\">link</a>");
+            emailService.send(email, "https://best-crypto-portfolio.herokuapp.com/api/v1/auth/confirmation/" + jwt);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
 
